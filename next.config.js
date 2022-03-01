@@ -20,7 +20,7 @@ const nextConfiguration = {
   eslint: {
     // Warning: Dangerously allow production builds to successfully complete even if
     // your project has ESLint errors.
-    ignoreDuringBuilds: false,
+    ignoreDuringBuilds: true,
   },
   i18n: {
     locales: ["en", "hi"],
