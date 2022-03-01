@@ -1,15 +1,15 @@
 export const translation = {
   en: {
     HeaderSection: {
-      Header: ["Home", "Features", "Pricing", "FAQs"],
+      GettingStarted: "Get Started for FREE",
+      Header: ["Home", "Features", "FAQs"],
       Blog: "Blog",
-      Title: "Convert your page into a store front",
+      Title: "One link for all your Recommendations",
       SubTitle:
-        "Recommend amazing products to your network and earn money when they buy from your store",
+        "Recommend amazing products to your network and earn money when they buy from your page",
       ImageTitle: "I love this product",
       ImageSubTitle: "Recommend to earn",
-      SignupTitle:
-        "Sign up for early access and get 6 months of influencer plan for free !",
+      SignupTitle: "",
       emailPlaceholder: "Your email address",
       signUpText: "Sign Up",
       signedUpSubTitle:
@@ -111,8 +111,8 @@ export const translation = {
       },
     },
     faqSection: {
-      Header: "Meet our pricing plan that suit you",
-      subHeader: "Deals for you",
+      Header: "New Product, New Questions",
+      subHeader: "FAQs",
       moreQuestions: "More Questions? Contact us",
       questions: [
         {
@@ -253,8 +253,8 @@ export const translation = {
         },
       },
       faqSection: {
-        Header: "Meet our pricing plan that suit you",
-        subHeader: "Deals for you",
+        Header: "New Product, New Questions",
+        subHeader: "FAQs",
         moreQuestions: "More Questions? Contact us",
         questions: [
           {
@@ -271,7 +271,7 @@ export const translation = {
           },
           {
             Title: "What all Indian Languages are supported?",
-            Text: "We currently support English, Hindi and Telugu. Stay tuned as we are expanding our language support.",
+            Text: "We currently support English and Hindi. Stay tuned as we are expanding our language support.",
           },
           {
             Title: "What all analytics are provided?",
@@ -286,6 +286,7 @@ export const translation = {
   },
   hi: {
     HeaderSection: {
+      GettingStarted: "मुफ़्त में शुरू करें",
       Header: [
         "होम",
         "फीचर्स",

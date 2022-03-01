@@ -1,4 +1,4 @@
-export default [
+const menuItems = [
   {
     path: "banner",
     label: "Home",
@@ -10,13 +10,10 @@ export default [
     offset: 0,
   },
   {
-    path: "pricing",
-    label: "Pricing",
-    offset: -40,
-  },
-  {
     path: "faq-two",
     label: "FAQs",
     offset: -70,
   },
 ];
+
+export default menuItems;

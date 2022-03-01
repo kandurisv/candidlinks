@@ -22,7 +22,7 @@ import { translation } from "translation";
 
 const Banner = () => {
   const { locale } = useRouter();
-
+  const router = useRouter();
   const [signedup, setSignedup] = React.useState(false);
   const [email, setEmail] = React.useState("");
   const signup = (event) => {
@@ -45,13 +45,17 @@ const Banner = () => {
     text: translation[locale].HeaderSection.SubTitle,
     subcontent: translation[locale].HeaderSection.SignupTitle,
     image: sectionImage,
+    GettingStarted: translation[locale].HeaderSection.GettingStarted,
   };
 
-  React.useEffect(() => {
-    console.log(locale);
-  }, []);
+  React.useEffect(() => {}, []);
 
-  const { title, text, clients, image, subcontent } = BANNER_DATA;
+  const signin = () => {
+    router.push("/auth");
+  };
+
+  const { title, text, clients, image, subcontent, GettingStarted } =
+    BANNER_DATA;
   return (
     <Box as="section" id="banner" sx={styles.section}>
       <Container sx={styles.container}>
@@ -61,7 +65,39 @@ const Banner = () => {
             <Text as="h4">{text}</Text>
 
             <Heading as="h3">{subcontent}</Heading>
-            {signedup ? (
+            <Flex
+              sx={{
+                flex: 1,
+              }}
+            >
+              <Flex
+                sx={{
+                  backgroundColor: "#D7354A",
+                  p: "16px",
+                  width: "60%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  borderRadius: "30px",
+                  cursor: "pointer",
+                  "&:hover": {
+                    backgroundColor: "#d42a40",
+                  },
+                }}
+                onClick={signin}
+              >
+                <Text
+                  sx={{
+                    color: "white",
+                    fontFamily: "Poppins",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {GettingStarted}
+                </Text>
+              </Flex>
+            </Flex>
+            {/* {signedup ? (
               <Text as="p">
                 {translation[locale].HeaderSection.signedUpSubTitle}
               </Text>
@@ -81,24 +117,13 @@ const Banner = () => {
                   // id="email"
                 />
 
-                <Button onClick={signup}>
-                  {translation[locale].HeaderSection.signUpText}
-                </Button>
+                <Flex onClick={signup} sx={styles.signupButton}>
+                  <Text sx={styles.signupButtonText}>
+                    {translation[locale].HeaderSection.signUpText}
+                  </Text>
+                </Flex>
               </Box>
-            )}
-            {/* <Box sx={styles.clients}>
-              <Text as="span">Our clients</Text>
-              {clients.map(({ link, image }, index) => (
-                <Link href={link} key={`client-image-key-${index}`}>
-                  <Image
-                    src={image}
-                    width="123"
-                    height="28"
-                    alt="client image"
-                  />
-                </Link>
-              ))}
-            </Box> */}
+            )} */}
           </Box>
           <Box sx={styles.images}>
             <Image src={image} width="740" height="558" alt="section image" />
@@ -114,12 +139,12 @@ export default Banner;
 const styles = {
   section: {
     overflow: "hidden",
-    backgroundColor: "#F9FBFD",
+    backgroundColor: "#FFFFFF",
     pt: ["160px", null, null, null, "200px"],
-    pb: ["70px", null, null, null, "100px"],
+    pb: ["72px", null, null, null, "96px"],
   },
   container: {
-    maxWidth: ["100%", null, null, null, null, "1170px", "1280px"],
+    maxWidth: ["100%", null, null, null, null, "1172px", "1280px"],
     position: "relative",
   },
   flex: {
@@ -130,53 +155,57 @@ const styles = {
     textAlign: ["center", "left", null, "center", "left"],
     flex: ["0 0 100%", null, null, null, "0 0 50%", "0 0 40%"],
     h2: {
-      fontFamily: "Bree Serif",
       color: "#02073E",
       letterSpacing: "-1px",
-      fontSize: ["28px", null, "32px", null, null, "45px", "55px"],
+      fontSize: ["24px", null, "36px", null, null, "48px"],
+      fontFamily: "Poppins",
       lineHeight: 1.45,
       maxWidth: "546px",
-      mb: "10px",
+      mb: "8px",
       mx: ["0", null, null, "auto"],
     },
     h4: {
-      fontSize: ["15px", null, "16px"],
+      fontSize: ["16px", null, "16px"],
       lineHeight: [2, null, 2.62],
       color: "#02073E",
       maxWidth: "486px",
+      fontFamily: "Poppins",
     },
     h3: {
-      fontSize: ["10px", null, "16px"],
+      fontSize: ["8px", null, "16px"],
       marginTop: 10,
       lineHeight: [2, null, 2.62],
       color: "#02073E",
       maxWidth: "486px",
+      fontFamily: "Poppins",
     },
     p: {
-      fontSize: ["10px", null, "16px"],
+      fontSize: ["8px", null, "16px"],
       marginTop: 10,
       lineHeight: [2, null, 2.62],
       color: "#d95f76",
       maxWidth: "486px",
       fontStyle: "italic",
+      fontFamily: "Poppins",
     },
     form: {
       display: "flex",
       flexWrap: "wrap",
       justifyContent: [null, null, null, "center", "flex-start"],
-      mt: "25px",
-      mb: ["20px", "40px"],
+      mt: "24px",
+      mb: ["16px", "32px"],
       input: {
-        width: ["100%", "215px", "346px", null, "300px", null, "340px"],
+        width: ["100%", "216px", "346px", null, "300px", null, "332px"],
         border: "1px solid #E9EDF5",
         borderRadius: "8px",
-        mr: ["0", "15px"],
-        mb: ["10px", "0"],
-        height: ["50px", null, null, null, null, "55px", "60px"],
+        mr: ["0", "16px"],
+        mb: ["8px", "0"],
+        height: ["48px", null, null, null, null, "60px", "60px"],
         fontSize: "16px",
+        fontFamily: "Poppins",
         color: "rgba(2,7,62,.4)",
         backgroundColor: "#ffffff",
-        px: "25px",
+        px: "24px",
         boxShadow: "none !important",
         outline: "none !important",
         "&::placeholder": {
@@ -188,10 +217,11 @@ const styles = {
       },
       button: {
         fontSize: "16px",
+        fontFamily: "Poppins",
         color: "#ffff",
         fontWeight: 700,
         borderRadius: "8px",
-        height: ["50px", null, null, null, null, "55px", "60px"],
+        height: ["48px", null, null, null, null, "60px", "60px"],
         display: "inline-flex",
         alignItems: "center",
         justifyContent: "center",
@@ -212,8 +242,8 @@ const styles = {
   images: {
     flex: ["0 0 100%", null, null, null, "0 0 50%", "0 0 60%"],
     position: "relative",
-    left: ["auto", null, null, null, "50px", "100px"],
-    mt: ["30px", null, "40px", null, "0"],
+    left: ["auto", null, null, null, "48px", "96px"],
+    mt: ["24px", null, "32px", null, "0"],
   },
   clients: {
     display: "flex",
@@ -224,16 +254,34 @@ const styles = {
       color: "#566272",
       opacity: 0.6,
       flex: ["0 0 100%", "1 1 100%", "0 0 auto"],
-      mb: ["10px", null, "0"],
+      mb: ["8px", null, "0"],
       textAlign: ["center", null, "left"],
     },
     a: {
       display: "flex",
       alignItems: "center",
-      ml: ["10px", "15px", null, "15px", "0px", null, "15px"],
+      ml: ["8px", "16px", null, "16px", "0px", null, "16px"],
       img: {
         display: "block",
       },
     },
+  },
+  signupButton: {
+    borderRadius: "32px",
+    backgroundColor: "#D7354A",
+    px: "32px",
+    py: "8px",
+    justifyContent: "center",
+    alignItems: "center",
+    "&:hover": {
+      backgroundColor: "#d42a40",
+    },
+    cursor: "pointer",
+  },
+  signupButtonText: {
+    fontFamily: "Poppins",
+    fontWeight: "medium",
+    fontSize: "16px",
+    color: "white",
   },
 };

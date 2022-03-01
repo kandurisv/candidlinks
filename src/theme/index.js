@@ -1,37 +1,29 @@
 export default {
-  breakpoints: ['376px', '576px', '768px', '992px', '1200px', '1650px'],
+  breakpoints: ["376px", "576px", "768px", "960px", "1200px", "1648px"],
   // example colors with dark mode
   colors: {
-    text: '#343D48', // body color and primary color
-    text_secondary: '#02073E', // secondary body color
-    heading: '#0F2137', // primary heading color
-    heading_secondary: '#343D48', // heading color
-    background: '#FFFFFF', // body background color
-    background_secondary: '#F9FBFD', // secondary background color
-    border_color: '#E9EDF5', // border color
-    primary: '#d95f76', // primary button and link color
-    secondary: '#d7354a', // secondary color - can be used for hover states
-    muted: '#7B8188', // muted color
-    accent: '#609', // a contrast color for emphasizing UI
+    text: "#343D48", // body color and primary color
+    text_secondary: "#02073E", // secondary body color
+    heading: "#0F2137", // primary heading color
+    heading_secondary: "#343D48", // heading color
+    background: "#FFFFFF", // body background color
+    background_secondary: "#F9FBFD", // secondary background color
+    border_color: "#E9EDF5", // border color
+    primary: "#d95f76", // primary button and link color
+    secondary: "#d7354a", // secondary color - can be used for hover states
+    muted: "#7B8188", // muted color
+    accent: "#609", // a contrast color for emphasizing UI
 
     // highlight	a background color for highlighting text
     modes: {
       dark: {
-        text: '#fff',
-        background: '#000',
-        primary: '#0cf',
-        secondary: '#09c',
-        muted: '#111',
+        text: "#fff",
+        background: "#000",
+        primary: "#0cf",
+        secondary: "#09c",
+        muted: "#111",
       },
     },
-  },
-  fonts: {
-    body: 'DM Sans',
-    // body:
-    //   'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
-    heading: 'DM Sans',
-    // heading: 'Bree Serif',
-    monospace: 'Menlo, monospace',
   },
   fontSizes: [
     12, // 0
@@ -52,23 +44,26 @@ export default {
     52, // 15
     64, // 16
   ],
+  fonts: {
+    body: "Poppins",
+    heading: "Poppins",
+    monospace: "Poppins",
+  },
   fontWeights: {
-    body: 'normal',
-    // body: 400,
-    heading: 500,
-    // heading: 700,
-    bold: 700,
+    body: 400,
+    heading: 600,
+    primary: 300,
   },
   lineHeights: {
-    body: '30px',
+    body: "24px",
     // body: 1.5,
-    heading: '50px',
+    heading: "48px",
     // heading: 1.125,
   },
   letterSpacings: {
-    body: 'normal',
-    caps: '0.2em',
-    heading: '-0.5px',
+    body: "normal",
+    caps: "0.2em",
+    heading: "-0.5px",
   },
   space: [
     0, // 0
@@ -97,33 +92,33 @@ export default {
     160, // 23
   ],
   sizes: {
-    container: ['1170px'],
+    container: ["1172px"],
   },
   // variants can use custom, user-defined names
   layout: {
     container: {
-      px: ['20px', null, '30px', null, null, '15px', '0'],
+      px: ["16px", null, "24px", null, null, "16px", "0"],
     },
     header: {
-      color: '#02073E',
-      fontWeight: 'normal',
+      color: "#02073E",
+      fontWeight: "normal",
       py: 3,
     },
     toolbar: {
-      display: 'flex',
-      alignItems: 'center',
+      display: "flex",
+      alignItems: "center",
       // justifyContent: 'space-between',
     },
     main: {},
     footer: {
-      backgroundColor: 'background_secondary',
+      backgroundColor: "background_secondary",
     },
   },
   section: {
     banner: {
       borderTop: (t) => `1px solid ${t.colors.border_color}`,
       borderBottom: (t) => `1px solid ${t.colors.border_color}`,
-      backgroundColor: 'background_secondary',
+      backgroundColor: "background_secondary",
       py: [3, 5],
     },
     feature: {
@@ -135,7 +130,7 @@ export default {
     product: {
       borderTop: (t) => `1px solid ${t.colors.border_color}`,
       borderBottom: (t) => `1px solid ${t.colors.border_color}`,
-      backgroundColor: 'background_color',
+      backgroundColor: "background_color",
       py: 5,
     },
     offer: {
@@ -156,60 +151,60 @@ export default {
   },
   text: {
     heading: {
-      fontFamily: 'heading',
-      lineHeight: 'heading',
-      fontWeight: 'heading',
+      fontFamily: "Poppins",
+      lineHeight: "heading",
+      fontWeight: "heading",
       fontSize: 4,
-      letterSpacing: 'heading',
-      color: 'heading',
+      letterSpacing: "heading",
+      color: "heading",
     },
     heroPrimary: {
       fontSize: [5, 55],
-      fontWeight: 'normal',
-      lineHeight: ['40px', '80px'],
-      letterSpacing: '-1px',
-      textAlign: ['center', 'left'],
+      fontWeight: "normal",
+      lineHeight: ["32px", "80px"],
+      letterSpacing: "-1px",
+      textAlign: ["center", "left"],
     },
     title: {
       // extends the text.heading styles
-      variant: 'text.heading',
+      variant: "text.heading",
       // fontSize: [6, 7, 8],
       // fontWeight: 'display',
-      fontWeight: 'bold',
+      fontWeight: "bold",
       fontSize: 18,
-      lineHeight: '30px',
-      color: '#0F2137',
+      lineHeight: "24px",
+      color: "#0F2137",
     },
     heroSecondary: {
-      color: 'text_secondary',
-      lineHeight: ['30px', '42px'],
-      letterSpacing: '0.1em',
-      textAlign: ['center', 'left'],
+      color: "text_secondary",
+      lineHeight: ["24px", "40px"],
+      letterSpacing: "0.1em",
+      textAlign: ["center", "left"],
     },
     lead: {
       fontSize: 40,
-      fontFamily: 'DM Sans',
-      fontWeight: '500',
-      lineHeight: '60px',
-      letterSpacing: '-1.5px',
-      color: '#0F2137',
+      fontFamily: "Poppins",
+      fontWeight: "500",
+      lineHeight: "60px",
+      letterSpacing: "-1.5px",
+      color: "#0F2137",
     },
     muted: {
-      lineHeight: '26px',
-      color: 'muted',
+      lineHeight: "24px",
+      color: "muted",
     },
     secondary: {
       fontWeight: 500,
-      color: '#d7354a',
-      lineHeight: '40px',
+      color: "#d7354a",
+      lineHeight: "32px",
     },
   },
   links: {
     bold: {
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     nav: {
-      display: ['none', null, 'inline-block'],
+      display: ["none", null, "inline-block"],
       p: 2,
       // transitionProperty: 'background-color',
       // transitionTimingFunction: 'ease-out',
@@ -224,13 +219,13 @@ export default {
       // },
     },
     logo: {
-      mt: '5px',
+      mt: "6px",
     },
     footer: {
-      display: 'block',
+      display: "block",
       px: 0,
-      color: 'inherit',
-      textDecoration: 'none',
+      color: "inherit",
+      textDecoration: "none",
     },
   },
   images: {
@@ -243,24 +238,24 @@ export default {
   // variants for buttons
   buttons: {
     menu: {
-      display: [null, null, 'none'],
+      display: [null, null, "none"],
     }, // default variant for MenuButton
     // you can reference other values defined in the theme
     primary: {
-      fontWeight: 'bold',
-      color: 'white',
-      bg: 'primary',
-      '&:hover': {
-        bg: 'dark',
+      fontWeight: "bold",
+      color: "white",
+      bg: "green",
+      "&:hover": {
+        bg: "dark",
       },
     },
     secondary: {
-      color: 'text',
-      bg: 'secondary',
+      color: "text",
+      bg: "secondary",
     },
     text: {
-      backgroundColor: 'transparent',
-      color: '#3183FF',
+      backgroundColor: "transparent",
+      color: "#3183FF",
       pl: 0,
     },
   },
@@ -271,93 +266,93 @@ export default {
       // boxShadow: '0 0 4px 1px rgba(0, 0, 0, 0.5)',
     },
     offer: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      flex: ['1 1 calc(50% - 16px)', '1 1 20%'],
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      flex: ["1 1 calc(50% - 16px)", "1 1 20%"],
       minHeight: 130,
       m: 2,
-      background: '#FFFFFF',
-      border: '1px solid #EDEFF6',
+      background: "#FFFFFF",
+      border: "1px solid #EDEFF6",
       borderRadius: 5,
     },
     featureCard: {
-      display: 'flex',
-      alignItems: ['center', 'flex-start'],
-      flexDirection: ['column', 'row'],
+      display: "flex",
+      alignItems: ["center", "flex-start"],
+      flexDirection: ["column", "row"],
       p: [0, 3],
     },
   },
   forms: {
     label: {
       fontSize: 1,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     input: {
       borderRadius: 8,
-      borderColor: 'border_color',
+      borderColor: "border_color",
       height: 60,
-      '&:focus': {
-        borderColor: 'primary',
+      "&:focus": {
+        borderColor: "primary",
         boxShadow: (t) => `0 0 0 2px ${t.colors.primary}`,
-        outline: 'none',
+        outline: "none",
       },
     },
   },
 
   badges: {
     primary: {
-      color: 'background',
-      bg: '#28A5FF',
+      color: "background",
+      bg: "#28A5FF",
       borderRadius: 30,
-      p: '3px 11px',
+      p: "4px 12px",
       fontSize: 1,
-      letterSpacing: '-0.5px',
+      letterSpacing: "-0.5px",
     },
     outline: {
-      color: 'primary',
-      bg: 'transparent',
-      boxShadow: 'inset 0 0 0 1px',
+      color: "primary",
+      bg: "transparent",
+      boxShadow: "inset 0 0 0 1px",
     },
   },
 
   styles: {
     // To add base, top-level styles to the <body> element, use theme.styles.root.
     root: {
-      fontFamily: 'body',
-      lineHeight: 'body',
-      fontWeight: 'body',
-      WebkitFontSmoothing: 'antialiased',
+      fontFamily: "Poppins",
+      lineHeight: "body",
+      fontWeight: "body",
+      WebkitFontSmoothing: "antialiased",
       button: {
-        cursor: 'pointer',
+        cursor: "pointer",
       },
       a: {
-        cursor: 'pointer',
-        textDecoration: 'none',
+        cursor: "pointer",
+        textDecoration: "none",
       },
     },
     // Divider styles
     hr: {
       border: 0,
-      borderBottom: '1px solid',
-      borderColor: '#D9E0E7',
+      borderBottom: "1px solid",
+      borderColor: "#D9E0E7",
     },
     // also you can use other HTML elements style here
     ul: {
-      listStyle: 'none',
+      listStyle: "none",
     },
     srOnly: {
-      border: '0 !important',
-      clip: 'rect(1px, 1px, 1px, 1px) !important',
-      clipPath: 'inset(50%) !important',
-      height: '1px !important',
-      margin: '-1px !important',
-      overflow: 'hidden !important',
-      padding: '0 !important',
-      position: 'absolute !important',
-      width: '1px !important',
-      whiteSpace: 'nowrap !important',
+      border: "0 !important",
+      clip: "rect(1px, 1px, 1px, 1px) !important",
+      clipPath: "inset(50%) !important",
+      height: "1px !important",
+      margin: "-1px !important",
+      overflow: "hidden !important",
+      padding: "0 !important",
+      position: "absolute !important",
+      width: "1px !important",
+      whiteSpace: "nowrap !important",
     },
   },
 };
