@@ -6,16 +6,15 @@ import SEO from "components/seo";
 import Layout from "components/layout";
 import Banner from "sections/banner";
 import Features from "sections/features";
-import FaqOne from "sections/faq-one";
 import FaqTwo from "sections/faq-two";
-import Video from "sections/video";
 import Pricing from "sections/pricing";
-import Services from "sections/services";
 import ProductFeature from "sections/product-feature";
-import CustomerSupport from "sections/customer-support";
 import Banner1 from "sections/banner1";
 import { useRouter } from "next/router";
 import { initOptimize } from "analytics/go";
+import "@fontsource/poppins";
+import { pageview } from "react-ga";
+import Script from "next/script";
 
 const useExperiment = (experimentId) => {
   const [variant, setVariant] = React.useState();
@@ -40,7 +39,7 @@ export default function IndexPage() {
   const router = useRouter();
   const variant = useExperiment("65elEA0zTVyfg-IGET3tYA");
 
-  React.useEffect(async () => {
+  React.useEffect(() => {
     initOptimize();
     console.log("Variant", variant);
     const handleRouteChange = (url) => {
@@ -68,12 +67,7 @@ export default function IndexPage() {
           />
           {variant ? <Banner1 /> : <Banner />}
           <Features />
-          {/* <FaqOne /> */}
           <ProductFeature />
-          {/* <Services /> */}
-          <Pricing />
-          {/* <CustomerSupport />
-          <Video /> */}
           <FaqTwo />
         </Layout>
       </StickyProvider>

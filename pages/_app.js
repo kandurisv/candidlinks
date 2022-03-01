@@ -5,13 +5,33 @@ import Router from 'next/router';
 import { initGA, logPageView } from 'analytics';
 */
 
-import 'rc-drawer/assets/index.css';
-import 'assets/css/react-slick.css';
-import 'react-modal-video/css/modal-video.min.css';
-import 'typeface-bree-serif';
-import 'typeface-dm-sans';
+import "rc-drawer/assets/index.css";
+import "assets/css/react-slick.css";
+import "react-modal-video/css/modal-video.min.css";
+import "typeface-bree-serif";
+import "typeface-dm-sans";
+import "@fontsource/poppins";
+import theme from "theme/chakra";
+import { ChakraProvider } from "@chakra-ui/react";
+import UserDataProvider from "lib/UserDataProvider";
+import { useUserData } from "../src/lib/hooks";
+import { createStore } from "redux";
+import { rootreducer } from "redux-lib/reducer";
+import { Provider } from "react-redux";
+// import TagManager from "react-gtm-module";
+
+// const tagManagerArgs = {
+//   gtmId: "GTM-NHTWJBD",
+//   dataLayerName: "PageDataLayer",
+// };
+
+// if (typeof window === "undefined") {
+//   TagManager.initialize(tagManagerArgs);
+// }
 
 export default function CustomApp({ Component, pageProps }) {
+  const userData = useUserData();
+  const store = createStore(rootreducer);
   /** 
    useEffect(() => {
      initGA();
@@ -20,5 +40,13 @@ export default function CustomApp({ Component, pageProps }) {
    }, []);
    */
 
-  return <Component {...pageProps} />;
+  return (
+    <Provider store={store}>
+      <UserDataProvider>
+        <ChakraProvider>
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </UserDataProvider>
+    </Provider>
+  );
 }
