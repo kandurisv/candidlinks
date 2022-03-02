@@ -25,10 +25,12 @@ export function MainScreen({ links, recos, buckets, user, cookie }) {
   const [currentLinks, setCurrentLinks] = React.useState(links);
   const [currentRecos, setCurrentRecos] = React.useState(recos);
   const [newRecos, setNewRecos] = React.useState([]);
-  const [newLinks, setNewLinks] = React.useState([]);
+  const [newLinks, setNewLinks] = React.useState({});
 
   React.useEffect(() => {
-    setCurrentLinks([...links, ...newLinks]);
+    console.log([...links]);
+    console.log(newLinks);
+    setCurrentLinks([...links, newLinks]);
     // axios
     //   .get(
     //     `${nonauthapi}links`,
@@ -42,7 +44,7 @@ export function MainScreen({ links, recos, buckets, user, cookie }) {
     //   .catch((error) => {
     //     console.log(error);
     //   });
-  }, [isOpenLinksModal]);
+  }, [isOpenLinksModal, links, newLinks]);
 
   React.useEffect(() => {
     setCurrentRecos([...recos, ...newRecos]);
@@ -59,7 +61,7 @@ export function MainScreen({ links, recos, buckets, user, cookie }) {
     //   .catch((error) => {
     //     console.log(error);
     //   });
-  }, [isOpenProductsModal]);
+  }, [isOpenProductsModal, recos, newRecos]);
 
   const onCloseLinksModal = (item) => {
     console.log("close");
