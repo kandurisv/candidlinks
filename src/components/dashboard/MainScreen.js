@@ -25,12 +25,14 @@ export function MainScreen({ links, recos, buckets, user, cookie }) {
   const [currentLinks, setCurrentLinks] = React.useState(links);
   const [currentRecos, setCurrentRecos] = React.useState(recos);
   const [newRecos, setNewRecos] = React.useState([]);
-  const [newLinks, setNewLinks] = React.useState({});
+  const [newLinks, setNewLinks] = React.useState([]);
 
   React.useEffect(() => {
-    console.log([...links]);
-    console.log(newLinks);
-    setCurrentLinks([...links, newLinks]);
+    // console.log([...links]);
+    console.log("NEW LINKS", newLinks);
+    console.log("EXISTING LINKS", links);
+
+    setCurrentLinks([...links, ...newLinks]);
     // axios
     //   .get(
     //     `${nonauthapi}links`,
@@ -64,25 +66,30 @@ export function MainScreen({ links, recos, buckets, user, cookie }) {
   }, [isOpenProductsModal, recos, newRecos]);
 
   const onCloseLinksModal = (item) => {
-    console.log("close");
+    // console.log("close");
     setOpenLinksModal(false);
   };
 
   const onCloseProductsModal = (item) => {
-    console.log("close");
+    // console.log("close");
     setOpenProductsModal(false);
   };
 
   const newReco = (item) => {
-    setNewRecos(item);
+    setNewRecos([...newRecos, ...item]);
   };
 
   const newLink = (item) => {
-    setNewLinks(item);
+    setNewLinks([...newLinks, ...item]);
   };
 
   return (
-    <Container sx={{ backgroundColor: "white", px: "0px" }}>
+    <Container
+      sx={{
+        px: "0px",
+        width: ["100%", "100%", "100%", null],
+      }}
+    >
       <LinksModal
         isOpen={isOpenLinksModal}
         closeParent={(item) => onCloseLinksModal(item)}
@@ -106,11 +113,19 @@ export function MainScreen({ links, recos, buckets, user, cookie }) {
         addProduct={() => setOpenProductsModal(true)}
       />
       <Element name="products">
-        <ShowProducts id="products" data={currentRecos} />
+        <ShowProducts
+          id="products"
+          data={currentRecos}
+          bucketData={JSON.parse(buckets).recos}
+        />
       </Element>
       <Divider />
       <Element name="links">
-        <ShowLinks id="links" data={currentLinks} />
+        <ShowLinks
+          id="links"
+          data={currentLinks}
+          bucketData={JSON.parse(buckets).links}
+        />
       </Element>
     </Container>
   );

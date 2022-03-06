@@ -2,6 +2,8 @@
 /** @jsx jsx */
 import { jsx, Container, Flex, Image, Text, Divider } from "theme-ui";
 import { Button } from "@chakra-ui/react";
+import Head from "next/head";
+
 import React, { useContext, useState, useEffect } from "react";
 // import { UserContext } from "../../src/lib/UserDataProvider";
 import UserDataProvider, { UserContext } from "lib/UserDataProvider";
@@ -43,26 +45,35 @@ export default function Dashboard({
   const [menuClick, setMenuClick] = React.useState(false);
   const [summary, setSummary] = React.useState({});
   // auth.signOut();
-  React.useEffect(() => {
-    console.log(
-      "links ",
-      links,
-      " recos ",
-      recos,
-      " buckets ",
-      buckets[0].u_buckets,
-      " user ",
-      user,
-      " socials ",
-      socials,
-      " currentuser ",
-      currentUser,
-      " cookies ",
-      cookies,
-      " master socials ",
-      masterSocials
-    );
-  }, [buckets, cookies, currentUser, masterSocials, recos, user, socials, links]);
+  // React.useEffect(() => {
+  //   console.log(
+  //     "links ",
+  //     links,
+  //     " recos ",
+  //     recos,
+  //     " buckets ",
+  //     buckets[0].u_buckets,
+  //     " user ",
+  //     user,
+  //     " socials ",
+  //     socials,
+  //     " currentuser ",
+  //     currentUser,
+  //     " cookies ",
+  //     cookies,
+  //     " master socials ",
+  //     masterSocials
+  //   );
+  // }, [
+  //   buckets,
+  //   cookies,
+  //   currentUser,
+  //   masterSocials,
+  //   recos,
+  //   user,
+  //   socials,
+  //   links,
+  // ]);
   React.useEffect(() => {
     setSummary({ products: recos.length, links: links.length });
 
@@ -84,6 +95,10 @@ export default function Dashboard({
 
   return (
     <div>
+      <Head>
+        <title>Dashboard</title>
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
+      </Head>
       <Header
         menu={(item) => menuActivate(item)}
         menuActive={menuClick}
@@ -125,19 +140,19 @@ export async function getServerSideProps(context) {
       .auth()
       .verifyIdToken(cookie)
       .then((res) => {
-        console.log("res", res);
+        // console.log("res", res);
         uid = res.uid;
         currentUser.push(res.uid);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   }
 
   if (currentUser[0] !== "") {
     const res = await fetch(`${nonauthapi}user?u_id=${currentUser[0]}`);
     const data = await res.json();
-    console.log("da", data);
+    // console.log("da", data);
     if (data.length === 0) {
       return {
         redirect: {
@@ -155,7 +170,7 @@ export async function getServerSideProps(context) {
   //     },
   //   }
   // }
-  console.log("asdf", currentUser[0]);
+  // console.log("asdf", currentUser[0]);
   if (!currentUser[0]) {
     return {
       redirect: {
@@ -165,28 +180,26 @@ export async function getServerSideProps(context) {
     };
   }
 
-  // const { search } = context.params;
+  const [
+    { value: links, reason: linksError },
+    { value: socials, reason: socialsError },
+    { value: recos, reason: recosError },
+    { value: buckets, reason: bucketsError },
+    { value: user, reason: userError },
+    { value: masterSocials, reason: masterSocialsError },
+  ] = await Promise.allSettled(
+    [
+      fetch(nonauthapi + "links" + "?u_id=" + currentUser[0]),
+      fetch(nonauthapi + "socials" + "?u_id=" + currentUser[0]),
+      fetch(nonauthapi + "recos" + "?u_id=" + currentUser[0]),
+      fetch(nonauthapi + "buckets" + "?u_id=" + currentUser[0]),
+      fetch(nonauthapi + "user" + "?u_id=" + currentUser[0]),
+      fetch(authapi + "socials/master"),
+    ].map((fetchApi) => fetchApi.then((res) => res.json()))
+  );
 
-  // Fetch data from external API
-  const res1 = await fetch(nonauthapi + "links" + "?u_id=" + currentUser[0]);
-  const links = await res1.json();
+  console.log(currentUser[0], buckets);
 
-  const res2 = await fetch(nonauthapi + "socials" + "?u_id=" + currentUser[0]);
-  const socials = await res2.json();
-
-  const res3 = await fetch(nonauthapi + "recos" + "?u_id=" + currentUser[0]);
-  const recos = await res3.json();
-
-  const res4 = await fetch(nonauthapi + "buckets" + "?u_id=" + currentUser[0]);
-  const buckets = await res4.json();
-
-  const res5 = await fetch(nonauthapi + "user" + "?u_id=" + currentUser[0]);
-  const user = await res5.json();
-
-  const res6 = await fetch(authapi + "socials/master");
-  const masterSocials = await res6.json();
-
-  // Pass data to the page via props
   return {
     props: {
       links,
@@ -213,10 +226,11 @@ const styles = {
     justifyContent: "flex-start",
   },
   mainscreen: {
+    width: ["100%", "100%", null],
     flex: [1, 1, 1, 2, 2, 2],
   },
   sidebar: {
-    mt: "96px",
+    // mt: "96px",
     width: "100%",
     // backgroundColor:'red',
     flex: 1,

@@ -18,7 +18,8 @@ import Lottie from "lottie-react";
 import smm from "../../../../public/lottie/smm.json";
 import { IoCloseCircle, IoCloseCircleOutline } from "react-icons/io5";
 import { RiCouponLine } from "react-icons/ri";
-import { Input } from "@chakra-ui/react";
+import { Input, useMediaQuery } from "@chakra-ui/react";
+import Head from "next/head";
 import {
   MdOutlineDriveFileRenameOutline,
   MdOutlineRecommend,
@@ -53,9 +54,10 @@ export function ProductsModal({
   const [signedURL, setSignedURL] = React.useState("");
   const [catArray, setCatArray] = React.useState([]);
   const [prodArray, setProdArray] = React.useState([]);
-
   const [catActive, setCatActive] = React.useState(false);
   const [prodActive, setProdActive] = React.useState(false);
+
+  const [isLargerThan480] = useMediaQuery("(min-width: 360px)");
 
   let hiddenInput = null;
 
@@ -74,15 +76,15 @@ export function ProductsModal({
   });
 
   React.useEffect(() => {
-    console.log("bUCKETR STRING", imageName);
+    // console.log("bUCKETR STRING", imageName);
     axios
       .get(`${authapi}image`, { params: { id: imageName } }, { timeout: 3000 })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setSignedURL(res.data);
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
     axios
       .get(
@@ -95,7 +97,7 @@ export function ProductsModal({
       })
 
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
   }, [imageName, values.cat_name]);
 
@@ -114,7 +116,7 @@ export function ProductsModal({
           alignItems: "center",
         }}
         onMouseDown={(e) => {
-          console.log(item.prod_name);
+          // console.log(item.prod_name);
           setValues({ ...values, prod_name: item.prod_name });
           setProdActive(false);
 
@@ -145,7 +147,7 @@ export function ProductsModal({
           alignItems: "center",
         }}
         onMouseDown={(e) => {
-          console.log(item.cat_name);
+          // console.log(item.cat_name);
           setValues({
             ...values,
             cat_name: item.cat_name,
@@ -167,7 +169,7 @@ export function ProductsModal({
               setProdArray(res.data);
             })
             .catch((error) => {
-              console.log(error);
+              // console.log(error);
             });
           return false;
         }}
@@ -183,7 +185,7 @@ export function ProductsModal({
 
   const handleChange = (e) => {
     e.preventDefault();
-    console.log(e.target.files[0]);
+    // console.log(e.target.files[0]);
     if (e.target.files.length) {
       setImageSelected(true);
       setImage({
@@ -200,7 +202,7 @@ export function ProductsModal({
   };
 
   const handleUpdate = (image) => {
-    console.log(image);
+    // console.log(image);
     const formData = new FormData();
     formData.append("image", image.raw);
     UploadImageToS3WithNativeSdk(image.raw, imageName);
@@ -219,8 +221,8 @@ export function ProductsModal({
     setInput(false);
   };
   const onSaveBucket = (item) => {
-    console.log(values);
-    setValues({ ...values, bucket: item });
+    // console.log(values);
+    setValues({ ...values, bucket: item.name });
     setA([...a, item]);
     setInput(false);
     const options = {
@@ -253,11 +255,13 @@ export function ProductsModal({
           isClosable: true,
         });
       })
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        // console.log(e);
+      });
   };
 
   const onSelectItem = (item) => {
-    setValues({ ...values, bucket: item });
+    setValues({ ...values, bucket: item.name });
   };
 
   const closeModal = () => {
@@ -288,7 +292,7 @@ export function ProductsModal({
         { timeout: 5000 }
       )
         .then((res) => {
-          console.log("Success", res.data);
+          //  console.log("Recos Success", res.data);
           newItem(res.data);
           setSortId((id) => id + 1);
           toast({
@@ -300,7 +304,9 @@ export function ProductsModal({
           });
           onRefresh();
         })
-        .catch((e) => console.log(e));
+        .catch((e) => {
+          // console.log(e);
+        });
     } else {
       toast({
         title: "Product Name and Product Link are mandatory",
@@ -337,7 +343,7 @@ export function ProductsModal({
         { timeout: 1000 }
       )
         .then((res) => {
-          console.log("Sucess", res.data);
+          //   console.log("Recos Success", res.data);
           newItem(res.data);
           setSortId((id) => id + 1);
           toast({
@@ -349,7 +355,9 @@ export function ProductsModal({
           });
           closeModal();
         })
-        .catch((e) => console.log(e));
+        .catch((e) => {
+          console.log(e);
+        });
     } else {
       toast({
         title: "Product Name, and Product Link are mandatory",
@@ -383,7 +391,7 @@ export function ProductsModal({
   const categorySearch = React.useMemo(
     () =>
       debounce(async () => {
-        console.log(values.cat_name);
+        // console.log(values.cat_name);
         if (values.cat_name.length >= 0) {
           axios
             .get(
@@ -396,7 +404,7 @@ export function ProductsModal({
             })
 
             .catch((error) => {
-              console.log(error);
+              // console.log(error);
             });
         }
       }, 500),
@@ -422,7 +430,7 @@ export function ProductsModal({
               setProdArray(res.data);
             })
             .catch((error) => {
-              console.log(error);
+              // console.log(error);
             });
         }
       }, 500),
@@ -434,147 +442,102 @@ export function ProductsModal({
   const onChangeProduct = () => {};
 
   return (
-    <Modal onClose={closeModal} isOpen={isOpen} isCentered>
-      <ModalOverlay />
-      <ModalContent maxW={"1000px"} sx={{ mb: "20%" }}>
-        <Container sx={style.container}>
-          <Flex sx={style.row1}>
-            <Text sx={style.topHeader}>Add Product</Text>
-            <Flex sx={style.saveContainer} onClick={savenclose}>
-              <Text sx={style.save}>Save </Text>
-              <BsCheckCircleFill color="#D7354A" size={15} sx={{ ml: "6px" }} />
+    <Flex>
+      <Head>
+        <meta
+          name="viewport"
+          content="initial-scale=0.75, width=device-width"
+        />
+      </Head>
+      <Modal onClose={closeModal} isOpen={isOpen} isCentered>
+        <ModalOverlay />
+        <ModalContent maxW={"1000px"}>
+          <Container sx={style.container}>
+            <Flex sx={style.row1}>
+              <Text sx={style.topHeader}>Add Product</Text>
+              <Flex sx={style.saveContainer} onClick={savenclose}>
+                <Text sx={style.save}>Save </Text>
+                <BsCheckCircleFill
+                  color="#D7354A"
+                  size={15}
+                  sx={{ ml: "6px" }}
+                />
+              </Flex>
             </Flex>
-          </Flex>
-          <Flex sx={style.row2}>
-            <Box sx={style.subHeaderContainer}>
-              <Text sx={style.subHeader}>Recommendations</Text>
-            </Box>
-          </Flex>
-          <Flex sx={style.row3}>
-            <Flex sx={style.lottie}>
-              <Lottie animationData={smm} />
+            <Flex sx={style.row2}>
+              <Box sx={style.subHeaderContainer}>
+                <Text sx={style.subHeader}>Recommendations</Text>
+              </Box>
             </Flex>
-            <Flex sx={style.linkView}>
-              <Flex sx={style.addlink}>
-                <Flex sx={style.leftContainer}>
-                  <Flex sx={style.imageContainer}>
-                    {image.preview ? (
-                      <Flex
-                        sx={{
-                          position: "relative",
-                          flex: 1,
-                        }}
-                      >
-                        <Flex
-                          onClick={() => hiddenInput.click()}
-                          sx={{ flex: 1 }}
-                        >
-                          <Image
-                            src={image.preview}
-                            alt="dummy"
-                            sx={{
-                              width: "100%",
-                              height: "100%",
-                              borderRadius: "100%",
-                            }}
-                          />
-                        </Flex>
+            <Flex sx={style.row3}>
+              <Flex sx={style.lottie}>
+                <Lottie animationData={smm} />
+              </Flex>
+              <Flex sx={style.linkView}>
+                <Flex sx={style.addlink}>
+                  <Flex sx={style.leftContainer}>
+                    <Flex sx={style.imageContainer}>
+                      {image.preview ? (
                         <Flex
                           sx={{
-                            position: "absolute",
-                            top: "-5%",
-                            right: "-5%",
-                            zIndex: 101,
-                            cursor: "pointer",
+                            position: "relative",
+                            flex: 1,
                           }}
-                          onClick={onCancelImage}
                         >
-                          <IoCloseCircle size={20} color="gray" />
+                          <Flex
+                            onClick={() => hiddenInput.click()}
+                            sx={{ flex: 1 }}
+                          >
+                            <Image
+                              src={image.preview}
+                              alt="dummy"
+                              sx={{
+                                width: "100%",
+                                height: "100%",
+                                borderRadius: "100%",
+                              }}
+                            />
+                          </Flex>
+                          <Flex
+                            sx={{
+                              position: "absolute",
+                              top: "-5%",
+                              right: "-5%",
+                              zIndex: 101,
+                              cursor: "pointer",
+                            }}
+                            onClick={onCancelImage}
+                          >
+                            <IoCloseCircle size={20} color="gray" />
+                          </Flex>
                         </Flex>
-                      </Flex>
-                    ) : (
-                      <Flex
-                        sx={{
-                          justifyContent: "center",
-                          alignItems: "center",
-                          textAlign: "center",
-                          flex: 1,
-                        }}
-                        onClick={() => hiddenInput.click()}
-                      >
-                        <Text sx={{ fontSize: "12px" }}>Upload Image</Text>
-                      </Flex>
-                    )}
-                    <input
-                      type="file"
-                      hidden
-                      onChange={handleChange}
-                      ref={(el) => (hiddenInput = el)}
-                    />
-                  </Flex>
-                </Flex>
-                <Flex
-                  sx={merge(style.middleContainer, {
-                    boxShadow: `0 0 1px 1px rgba(0,0,0,0.5)`,
-                  })}
-                >
-                  <Flex
-                    sx={merge(style.titleContainer, { position: "relative" })}
-                  >
-                    <Flex sx={{ flex: 1 }}>
-                      <Flex
-                        sx={{
-                          justifyContent: "center",
-                          alignItems: "center",
-                          p: "8px",
-                        }}
-                      >
-                        <BiCategoryAlt size={20} />
-                      </Flex>
-
-                      <Input
-                        sx={{ color: "#323232" }}
-                        placeholder="Enter Category Name"
-                        variant="flushed"
-                        onChange={(e) => {
-                          setValues((values) => ({
-                            ...values,
-                            cat_name: e.target.value,
-                          }));
-                          onChangeCategory(e.target.value);
-                          categorySearch();
-                        }}
-                        value={values.cat_name}
-                        onFocus={() => setCatActive(true)}
-                        onBlur={() => setCatActive(false)}
-                        autoFocus
+                      ) : (
+                        <Flex
+                          sx={{
+                            justifyContent: "center",
+                            alignItems: "center",
+                            textAlign: "center",
+                            flex: 1,
+                          }}
+                          onClick={() => hiddenInput.click()}
+                        >
+                          <Text sx={{ fontSize: "12px" }}>Upload Image</Text>
+                        </Flex>
+                      )}
+                      <input
+                        accept="image/png, image/jpeg, image/jpg"
+                        type="file"
+                        hidden
+                        onChange={handleChange}
+                        ref={(el) => (hiddenInput = el)}
                       />
                     </Flex>
-                    {catActive ? (
-                      <Flex
-                        sx={{
-                          flex: 1,
-
-                          // height: "250px",
-                          width: "100%",
-                          position: "absolute",
-                          top: "50%",
-                          mt: "30px",
-                          flexDirection: "column",
-                          p: "8px",
-                          backgroundColor: "white",
-                          borderRadius: "8px",
-                          borderWidth: 1,
-                          boxShadow: `0 0 1px 1px rgba(0,0,0,0.5)`,
-                        }}
-                      >
-                        {catArray.map((item, index) => {
-                          return <CatItem key={index} item={item} />;
-                        })}
-                      </Flex>
-                    ) : null}
                   </Flex>
-                  {catActive ? null : (
+                  <Flex
+                    sx={merge(style.middleContainer, {
+                      boxShadow: `0 0 1px 1px rgba(0,0,0,0.5)`,
+                    })}
+                  >
                     <Flex
                       sx={merge(style.titleContainer, { position: "relative" })}
                     >
@@ -586,31 +549,33 @@ export function ProductsModal({
                             p: "8px",
                           }}
                         >
-                          <MdOutlineRecommend size={20} />
+                          <BiCategoryAlt size={20} />
                         </Flex>
 
                         <Input
                           sx={{ color: "#323232" }}
-                          placeholder="Enter Product Name"
+                          placeholder="Enter Category Name"
                           variant="flushed"
                           onChange={(e) => {
                             setValues((values) => ({
                               ...values,
-                              prod_name: e.target.value,
+                              cat_name: e.target.value,
                             }));
-                            onChangeProduct();
-                            productSearch();
+                            onChangeCategory(e.target.value);
+                            categorySearch();
                           }}
-                          value={values.prod_name}
-                          onFocus={() => setProdActive(true)}
-                          onBlur={() => setProdActive(false)}
+                          value={values.cat_name}
+                          onFocus={() => setCatActive(true)}
+                          onBlur={() => setCatActive(false)}
+                          autoFocus
                         />
                       </Flex>
-                      {prodActive && values.cat_id ? (
+                      {catActive ? (
                         <Flex
                           sx={{
                             flex: 1,
-                            height: "450px",
+
+                            // height: "250px",
                             width: "100%",
                             position: "absolute",
                             top: "50%",
@@ -623,119 +588,192 @@ export function ProductsModal({
                             boxShadow: `0 0 1px 1px rgba(0,0,0,0.5)`,
                           }}
                         >
-                          {prodArray.map((item, index) => {
-                            return <ProdItem key={index} item={item} />;
+                          {catArray.map((item, index) => {
+                            return <CatItem key={index} item={item} />;
                           })}
                         </Flex>
                       ) : null}
                     </Flex>
-                  )}
-                  {catActive || (prodActive && values.cat_id) ? null : (
-                    <Flex sx={style.titleContainer}>
-                      <Flex sx={{ flex: 1 }}>
-                        <Flex
-                          sx={{
-                            justifyContent: "center",
-                            alignItems: "center",
-                            p: "8px",
-                          }}
-                        >
-                          <BiLink size={20} />
-                        </Flex>
-
-                        <Input
-                          sx={{ color: "#323232" }}
-                          placeholder="Enter Product Link"
-                          variant="flushed"
-                          onChange={(e) =>
-                            setValues({ ...values, prod_link: e.target.value })
-                          }
-                          value={values.link}
-                        />
-                      </Flex>
-                    </Flex>
-                  )}
-                  {catActive || (prodActive && values.cat_id) ? null : (
-                    <Flex sx={style.pickerContainer}>
-                      <Flex sx={{ flex: 1 }}>
-                        <Flex
-                          sx={{
-                            justifyContent: "center",
-                            alignItems: "center",
-                            p: "8px",
-                          }}
-                        >
-                          <RiCouponLine size={20} />
-                        </Flex>
-
-                        <Input
-                          sx={{ color: "#323232" }}
-                          placeholder="Enter your affiliate code"
-                          variant="flushed"
-                          onChange={(e) =>
-                            setValues({ ...values, aff_code: e.target.value })
-                          }
-                          value={values.aff_code}
-                        />
-                      </Flex>
-                      <Flex sx={{ mr: "16px" }}>
-                        <Menu>
-                          <BucketsModal
-                            isOpen={input}
-                            onClose={onCancelBucket}
-                            onSave={(item) => onSaveBucket(item)}
-                          />
-                          <MenuButton
-                            px={4}
-                            py={2}
-                            transition="all 0.2s"
-                            borderRadius="md"
-                            borderWidth="1px"
-                            _hover={{ bg: "gray.400" }}
-                            _expanded={{ bg: "blue.400" }}
-                            _focus={{ boxShadow: "outline" }}
+                    {catActive ? null : (
+                      <Flex
+                        sx={merge(style.titleContainer, {
+                          position: "relative",
+                        })}
+                      >
+                        <Flex sx={{ flex: 1 }}>
+                          <Flex
+                            sx={{
+                              justifyContent: "center",
+                              alignItems: "center",
+                              p: "8px",
+                            }}
                           >
-                            <Text>{values.bucket}</Text>
-                          </MenuButton>
-                          <MenuList>
-                            {a.map((item, index) => {
-                              return (
-                                <MenuItem key={index.toString()}>
-                                  <Flex onClick={() => onSelectItem(item)}>
-                                    <Text>{item}</Text>
-                                  </Flex>
-                                </MenuItem>
-                              );
+                            <MdOutlineRecommend size={20} />
+                          </Flex>
+
+                          <Input
+                            sx={{ color: "#323232" }}
+                            placeholder="Enter Product Name"
+                            variant="flushed"
+                            onChange={(e) => {
+                              setValues((values) => ({
+                                ...values,
+                                prod_name: e.target.value,
+                              }));
+                              onChangeProduct();
+                              productSearch();
+                            }}
+                            value={values.prod_name}
+                            onFocus={() => setProdActive(true)}
+                            onBlur={() => setProdActive(false)}
+                          />
+                        </Flex>
+                        {prodActive && values.cat_id ? (
+                          <Flex
+                            sx={{
+                              flex: 1,
+                              height: "450px",
+                              width: "100%",
+                              position: "absolute",
+                              top: "50%",
+                              mt: "30px",
+                              flexDirection: "column",
+                              p: "8px",
+                              backgroundColor: "white",
+                              borderRadius: "8px",
+                              borderWidth: 1,
+                              boxShadow: `0 0 1px 1px rgba(0,0,0,0.5)`,
+                            }}
+                          >
+                            {prodArray.map((item, index) => {
+                              return <ProdItem key={index} item={item} />;
                             })}
-                            <MenuItem>
-                              <Flex onClick={() => onAddBucket()}>
-                                <Text sx={{ color: "red" }}>
-                                  + Add a Bucket
-                                </Text>
-                              </Flex>
-                            </MenuItem>
-                          </MenuList>
-                        </Menu>
+                          </Flex>
+                        ) : null}
                       </Flex>
+                    )}
+                    {catActive || (prodActive && values.cat_id) ? null : (
+                      <Flex sx={style.titleContainer}>
+                        <Flex sx={{ flex: 1 }}>
+                          <Flex
+                            sx={{
+                              justifyContent: "center",
+                              alignItems: "center",
+                              p: "8px",
+                            }}
+                          >
+                            <BiLink size={20} />
+                          </Flex>
+
+                          <Input
+                            sx={{ color: "#323232" }}
+                            placeholder="Enter Product Link"
+                            variant="flushed"
+                            onChange={(e) =>
+                              setValues({
+                                ...values,
+                                prod_link: e.target.value,
+                              })
+                            }
+                            value={values.link}
+                          />
+                        </Flex>
+                      </Flex>
+                    )}
+                    {catActive || (prodActive && values.cat_id) ? null : (
+                      <Flex sx={style.pickerContainer}>
+                        <Flex
+                          sx={{
+                            flex: 1,
+                            justifyContent: ["flex-start", "flex-start", null],
+                            alignItems: ["flex-start", "flex-start", null],
+                          }}
+                        >
+                          <Flex
+                            sx={{
+                              justifyContent: "center",
+                              alignItems: "center",
+                              p: "8px",
+                            }}
+                          >
+                            <RiCouponLine size={20} />
+                          </Flex>
+
+                          <Input
+                            sx={{ color: "#323232" }}
+                            placeholder="Enter your affiliate code"
+                            variant="flushed"
+                            onChange={(e) =>
+                              setValues({ ...values, aff_code: e.target.value })
+                            }
+                            value={values.aff_code}
+                          />
+                        </Flex>
+                        <Flex
+                          sx={{
+                            mr: "16px",
+                            mt: ["16px", "16px", null],
+                            ml: ["32px", "32px", null],
+                          }}
+                        >
+                          <Menu>
+                            <BucketsModal
+                              isOpen={input}
+                              onClose={onCancelBucket}
+                              onSave={(item) => onSaveBucket(item)}
+                            />
+                            <MenuButton
+                              px={4}
+                              py={2}
+                              transition="all 0.2s"
+                              borderRadius="md"
+                              borderWidth="1px"
+                              _hover={{ bg: "gray.400" }}
+                              _expanded={{ bg: "blue.400" }}
+                              _focus={{ boxShadow: "outline" }}
+                            >
+                              <Text>{values.bucket}</Text>
+                            </MenuButton>
+                            <MenuList>
+                              {a.map((item, index) => {
+                                return (
+                                  <MenuItem key={index.toString()}>
+                                    <Flex onClick={() => onSelectItem(item)}>
+                                      <Text>{item.name}</Text>
+                                    </Flex>
+                                  </MenuItem>
+                                );
+                              })}
+                              <MenuItem>
+                                <Flex onClick={() => onAddBucket()}>
+                                  <Text sx={{ color: "red" }}>
+                                    + Add a Bucket
+                                  </Text>
+                                </Flex>
+                              </MenuItem>
+                            </MenuList>
+                          </Menu>
+                        </Flex>
+                      </Flex>
+                    )}
+                  </Flex>
+                  <Flex sx={style.rightContainer}>
+                    <Flex sx={style.delete} onClick={onRefresh}>
+                      <IoCloseCircleOutline size={20} />
                     </Flex>
-                  )}
-                </Flex>
-                <Flex sx={style.rightContainer}>
-                  <Flex sx={style.delete} onClick={onRefresh}>
-                    <IoCloseCircleOutline size={20} />
                   </Flex>
                 </Flex>
               </Flex>
             </Flex>
-          </Flex>
-          <Flex sx={style.row4}>
-            <Flex onClick={savenadd} sx={{ cursor: "pointer" }}>
-              <BsPlusCircleFill color="#D7354A" size="32px" sx={{}} />
+            <Flex sx={style.row4}>
+              <Flex onClick={savenadd} sx={{ cursor: "pointer" }}>
+                <BsPlusCircleFill color="#D7354A" size="32px" sx={{}} />
+              </Flex>
             </Flex>
-          </Flex>
-        </Container>
-      </ModalContent>
-    </Modal>
+          </Container>
+        </ModalContent>
+      </Modal>
+    </Flex>
   );
 }
 
@@ -788,6 +826,7 @@ const style = {
     fontSize: "16px",
   },
   saveContainer: {
+    mx: "4px",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -854,11 +893,11 @@ const style = {
     p: "2px",
   },
   pickerContainer: {
-    flexDirection: "row",
+    flexDirection: ["column", "column", "row", "row", "row", "row"],
     justifyContent: "space-between",
     py: "8px",
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: [null, null, "center"],
+    alignItems: [null, null, "center"],
   },
   titleContainer: {
     width: "100%",

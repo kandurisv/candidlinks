@@ -3,7 +3,17 @@
 import { jsx, Container, Flex, Image, Text, Grid } from "theme-ui";
 
 const SocialElement = ({ item }) => (
-  <Flex sx={style.socialView} onClick={() => console.log("Trell")}>
+  <Flex
+    sx={style.socialView}
+    onClick={() => {
+      // console.log(item);
+      localStorage.setItem(
+        "clickLatestSocial",
+        item.social_ulink + item.u_name
+      );
+      window.open(item.social_ulink + item.u_name, "_blank"); //to open new page
+    }}
+  >
     <Image
       src={item.social_logo}
       alt="Logo for Social Network Websites"
@@ -20,9 +30,18 @@ const SocialElement = ({ item }) => (
 // Add a custom Link
 export function SocialHandles({ data }) {
   return (
-    <Flex sx={{ px: ["1%","1%","10%","10%","10%","10%"], mt: "8px", pb: "16px", flexDirection:"column"}}>
+    <Flex
+      sx={{
+        width: "100%",
+        px: "10%",
+        // ml: ["0%", "0%", "10%", "10%", "10%", "10%"],
+        // mr: ["0%", "10%", "10%", "10%", "10%", "10%"],
+        my: "8px",
+        flexDirection: "column",
+      }}
+    >
       <Text sx={style.heading}>Social Handles</Text>
-      <Grid gap={2} columns={[6, 6, 6, 6, 6, 6]} sx={style.grid}>
+      <Grid gap={2} columns={[3, 6, 6, 6, 6, 6]} sx={style.grid}>
         {data.map((item, index) => {
           return <SocialElement item={item} key={index} />;
         })}
@@ -40,7 +59,7 @@ const style = {
     py: "8px",
   },
   socialView: {
-    ml:['50px','50px','50px','10px','10px','10px'],
+    ml: ["50px", "50px", "50px", "10px", "10px", "10px"],
     textAlign: "center",
     cursor: "pointer",
     justifyContent: "center",
@@ -53,7 +72,7 @@ const style = {
   },
   socialText: {
     fontFamily: "Poppins",
-    fontSize: "11px",
+    fontSize: "8px",
     color: "#646464",
     textAlign: "center",
   },

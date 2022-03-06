@@ -118,6 +118,7 @@ export function SocialModal({
   const [values, setValues] = React.useState([]);
 
   useEffect(() => {
+    console.log("data in social modal", data);
     data.map((item, index) => {
       setValues((values) => [
         ...values,
@@ -134,21 +135,21 @@ export function SocialModal({
         },
       ]);
     });
-  }, []);
+  }, [data, user]);
 
   React.useEffect(() => {
     const a = [];
 
-    console.log("data", data);
+    // console.log("data", data);
 
     axios
       .get(`${authapi}image`, { params: { id: imageName } }, { timeout: 3000 })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setSignedURL(res.data);
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
   }, [imageName, data, user]);
 
@@ -157,7 +158,7 @@ export function SocialModal({
   };
 
   const savenclose = () => {
-    console.log("values", values);
+    // console.log("values", values);
     const options = {
       headers: {
         Authorization: `bearer ${cookie}`,
@@ -175,7 +176,7 @@ export function SocialModal({
       { timeout: 1000 }
     )
       .then((res) => {
-        console.log("Sucess", res.data);
+        // console.log("Sucess", res.data);
         setSortId((id) => id + 1);
         toast({
           title: "Socials Updated",
@@ -186,11 +187,13 @@ export function SocialModal({
         });
         closeModal();
       })
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        // console.log(e);
+      });
   };
 
   const onClickSocialItem = (socialItem) => {
-    console.log(values);
+    // console.log(values);
     // console.log(socialItem);
     setActiveItem(socialItem);
     setInputActive(true);

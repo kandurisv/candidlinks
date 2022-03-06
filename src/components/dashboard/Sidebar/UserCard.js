@@ -3,24 +3,45 @@
 import { jsx, Container, Flex, Image, Text, Box } from "theme-ui";
 import firebase from "firebase";
 import { auth, googleAuthProvider } from "../../../lib/firebase";
-import { Button } from "@chakra-ui/react";
+import { border, Button } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
+import { AiFillCopy } from 'react-icons/ai';
+import { useToast } from "@chakra-ui/react";
 // Add a custom Link
 export function UserCard({ data }) {
   const router = useRouter();
+  const toast = useToast();
 
   React.useEffect(() => {
-    console.log("user data", data);
+    // console.log("user data", data);
   }, [data]);
 
   const addLinks = () => {
-    console.log("add links");
+    // console.log("add links");
   };
 
   const linkClick = () => {
-    router.push(data[0].u_name);
+    window.open("https://www.cndd.in/"+data[0].u_uuid, "_blank");
+    // router.push(data[0].u_uuid);
+    toast({
+      title: "Link Copied",
+      // description: "Add you Candid link to Instagram Bio",
+      status: "success",
+      duration: 1000,
+      isClosable: true,
+    });
+  };
+
+  const linkCopy = () => {
+    toast({
+      title: "Link Copied",
+      description: "Add you Candid link to Instagram Bio",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+    });
   }
 
   return (
@@ -36,11 +57,18 @@ export function UserCard({ data }) {
           }
         />
       </Container>
-      <CopyToClipboard text={"cndd.in/" + data[0].u_uuid}>
-            <Flex as="nav" sx={style.nav} onClick={linkClick}>
-              <Text sx={style.nav.navLink}>{"wwww.cndd.in/" + data[0].u_uuid}</Text>
+      <Flex as="nav" sx={style.nav}>
+          <CopyToClipboard text={"cndd.in/" + data[0].u_uuid} >
+            <Flex onClick={linkClick}>
+              <Button sx={{fontSize:'24px'}}>{"cndd.in/" + data[0].u_uuid}</Button>
             </Flex>
-      </CopyToClipboard>
+          </CopyToClipboard>
+          <CopyToClipboard mt='6px' text={"cndd.in/" + data[0].u_uuid} >
+            <Flex onClick={linkCopy}>
+              <AiFillCopy sx={{fontSize:'24px', ml:'8px'}} color={"gray"}/>
+            </Flex>
+          </CopyToClipboard>
+          </Flex>
       <Flex sx={style.userPhotoView}>
         <Image
           sx={style.userImage}
@@ -68,22 +96,24 @@ export function UserCard({ data }) {
 
 const style = {
   container: {
-    width: "100%",
-    // mt:'96px',
+    width: "full",
+    mt:["96px","96px","0px","0px","0px","0px"],
+    // mr:["-10%","-10%","0%","0%","0%","0%"],
     borderTopRadius: "16px",
   },
   coverPhotoView: {
     borderTopRadius: "16px",
     backgroundColor: "white",
-
+    mt:"4px",
+    width:"full",
     // width: ["0px","0px","0px","448px","448px","448px"],
-    width: ["0px","448px","448px","448px","448px","448px"],
-    height: ["50px", "248px","248px","248px","248px","248px"],
+    // width: ["0px","448px","448px","448px","448px","448px"],
+    // height: ["48rem", "248rem","248px","160px","248px","248px"],
     justifyContent: "flex-start",
   },
   userPhotoView: {
     justifyContent:'center',
-    mt: "-24px",
+    mt: ["24px","-48px","-48px", "-48px","0px","0px"],
     width: "100%",
     height: "100%",
     backgroundColor: "transparent",
@@ -129,6 +159,7 @@ const style = {
   },
 
   nav: {
+    cursor: "pointer",
     display:['', 'none', 'none', 'none', 'none'],
     justifyContent: "center",
     navLink: {

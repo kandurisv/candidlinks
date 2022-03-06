@@ -17,13 +17,18 @@ export function Sidebar({ socials, user, summary }) {
   return (
     <Flex
       sx={{
-        // mt:'-200px',
-        flexDirection: 'column',
-        // width:'100%',
-        // backgroundColor: "yellow",
-        // mr:["50px", "0px","0px","0px","0px","0px"],
+        flexDirection: "column",
+        width: ["100%", "100%", null],
+        mx: ["1rem", "1rem", "0px", "0px", "0px", "0px"],
         borderRadius: "16px",
-        boxShadow: [" " ," " ," " ,"0 0 4px 1px rgba(0, 0, 0, 0.5)","0 0 4px 1px rgba(0, 0, 0, 0.5)","0 0 4px 1px rgba(0, 0, 0, 0.5)"],
+        boxShadow: [
+          " ",
+          " ",
+          " ",
+          "0 0 4px 1px rgba(0, 0, 0, 0.5)",
+          "0 0 4px 1px rgba(0, 0, 0, 0.5)",
+          "0 0 4px 1px rgba(0, 0, 0, 0.5)",
+        ],
       }}
     >
       <UserCard data={user} />

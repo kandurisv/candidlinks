@@ -39,12 +39,12 @@ export function Sidebar({
         setCurrentSocials(responseData);
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
   }, [isOpenSocialModal, user]);
 
   const onCloseSocialModal = (item) => {
-    console.log("close");
+    // console.log("close");
     setOpenSocialModal(false);
   };
   const router = useRouter();
@@ -52,12 +52,18 @@ export function Sidebar({
   return (
     <Flex
       sx={{
-        flexDirection: 'column',
-        // width:'100%',
-        // backgroundColor: "yellow",
-        // mr:["50px", "0px","0px","0px","0px","0px"],
+        flexDirection: "column",
+        width: ["100%", "100%", null],
+        mx: ["1rem", "1rem", "0px", "0px", "0px", "0px"],
         borderRadius: "16px",
-        boxShadow: [" " ," " ," " ,"0 0 4px 1px rgba(0, 0, 0, 0.5)","0 0 4px 1px rgba(0, 0, 0, 0.5)","0 0 4px 1px rgba(0, 0, 0, 0.5)"],
+        boxShadow: [
+          " ",
+          " ",
+          " ",
+          "0 0 4px 1px rgba(0, 0, 0, 0.5)",
+          "0 0 4px 1px rgba(0, 0, 0, 0.5)",
+          "0 0 4px 1px rgba(0, 0, 0, 0.5)",
+        ],
       }}
     >
       <SocialModal

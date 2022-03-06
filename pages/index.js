@@ -15,7 +15,8 @@ import { initOptimize } from "analytics/go";
 import "@fontsource/poppins";
 import { pageview } from "react-ga";
 import Script from "next/script";
-
+import { ContactUsModal } from "sections/video";
+import Head from 'next/head';
 const useExperiment = (experimentId) => {
   const [variant, setVariant] = React.useState();
   React.useEffect(() => {
@@ -38,10 +39,11 @@ const useExperiment = (experimentId) => {
 export default function IndexPage() {
   const router = useRouter();
   const variant = useExperiment("65elEA0zTVyfg-IGET3tYA");
+  const [isOpenLinksModal, setOpenLinksModal] = React.useState(false);
 
   React.useEffect(() => {
     initOptimize();
-    console.log("Variant", variant);
+    // console.log("Variant", variant);
     const handleRouteChange = (url) => {
       pageview(url);
     };
@@ -59,16 +61,25 @@ export default function IndexPage() {
 
   return (
     <ThemeProvider theme={theme}>
+
+      <Head>
+        <title>Dashboard</title>
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
+      </Head>
       <StickyProvider>
         <Layout>
           <SEO
             title="Get your free CNDD link"
             description="Now claim your candid store and share product recommendations seamlessly. Earn money when people buy from your store"
           />
+          <ContactUsModal
+            isOpen={isOpenLinksModal}
+            closeParent={() => setOpenLinksModal(false)}
+          />
           {variant ? <Banner1 /> : <Banner />}
           <Features />
           <ProductFeature />
-          <FaqTwo />
+          <FaqTwo addQuestion={() => setOpenLinksModal(true)} />
         </Layout>
       </StickyProvider>
     </ThemeProvider>

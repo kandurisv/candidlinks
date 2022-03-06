@@ -10,6 +10,7 @@ import { nonauthapi } from 'lib/api';
 import axios from 'axios';
 import { firebaseAdmin } from 'lib/firebaseadmin';
 import nookies from "nookies";
+import Head from "next/head";
 export default function Onboard(props) {
 
 	const router = useRouter()
@@ -41,20 +42,27 @@ export default function Onboard(props) {
 				return <Step2 nextStep={nextStep} />
 			case 3:
 				return <Step3 nextStep={nextStep} />;
-			case 4:
-				return <Step4 />;
+			// case 4:
+			// 	return <Step4 />;
 			default:
 				return null;
 		}
 	};
 
-	return <>{switchStep()}</>;
+	return <>
+	
+	<Head>
+        <title>Onboard | CNDD</title>
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
+      </Head>
+	{switchStep()}
+	</>;
 }
 
 export async function getServerSideProps(context) {
 
 	const cookie = nookies.get(context).token;
-	console.log('c',cookie)
+	// console.log('c',cookie)
 	let uid = ''
 	if(cookie){
 		const token = await firebaseAdmin.auth().verifyIdToken(cookie)
@@ -65,11 +73,11 @@ export async function getServerSideProps(context) {
 			// console.log(err)
 		});
 		// console.log('token', token)
-		console.log('onboard', uid)
+		// console.log('onboard', uid)
 		if(uid!==''){
 			const res = await fetch(`${nonauthapi}user?u_id=${uid}`)
 			const data = await res.json()
-			console.log('data',data)
+			// console.log('data',data)
 			if (data.length!==0 && data[0].u_uuid!=='') {
 				// console.log(data)
 				return {
