@@ -1,7 +1,9 @@
-import { Box, Heading, Flex, Button, Image, Progress } from '@chakra-ui/react';
+import { Flex, Image, Progress } from '@chakra-ui/react';
 import logo from "assets/CaNDiD_B.png";
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+
 const Header = (props) => {
+	const router = useRouter();
 	// const [zero, setZero]=useState(false);
 	// useEffect(()=>{
 	//   if(props.value===0){
@@ -11,6 +13,9 @@ const Header = (props) => {
 	//     setZero(false);
 	//   }
 	// })
+	const handleClick=()=>{
+		router.push('/');
+	}
 	return (
 		<Flex
 			as='nav'
@@ -24,9 +29,11 @@ const Header = (props) => {
 		>
 			{/* <Flex align='center' mr={5}> */}
 			<Image
+				onClick={handleClick}
 				height={70}
 				w={210}
         src={logo}
+				cursor='pointer'
         alt="startup landing logo"
       />
 

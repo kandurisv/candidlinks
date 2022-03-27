@@ -1,18 +1,8 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx, Container, Flex, Text, merge } from "theme-ui";
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  useToast,
-  Textarea,
-} from "@chakra-ui/react";
-import { BsCheckCircleFill } from "react-icons/bs";
-import React from "react";
-import { Input } from "@chakra-ui/react";
-import { nonauthapi } from "lib/api";
+import { Flex, Input, Modal, ModalContent, ModalOverlay, Text, Textarea, useToast } from "@chakra-ui/react";
 import axios from "axios";
+import { nonauthapi } from "lib/api";
+import React from "react";
+import { BsCheckCircleFill } from "react-icons/bs";
 
 // Add a custom Link
 export function ContactUsModal({ closeParent, isOpen }) {
@@ -55,7 +45,9 @@ export function ContactUsModal({ closeParent, isOpen }) {
           setValues({ name: "", email: "", question: "" });
           closeModal();
         })
-        .catch((e) => console.log(e));
+        .catch((e) => {
+          // console.log(e)
+        });
     } else {
       toast({
         title: "Please provide your name and email",
@@ -71,7 +63,7 @@ export function ContactUsModal({ closeParent, isOpen }) {
     <Modal onClose={closeModal} isOpen={isOpen} isCentered>
       <ModalOverlay />
       <ModalContent maxW={"1000px"}>
-        <Container sx={style.container}>
+        <Flex sx={style.container}>
           <Flex sx={style.row1}>
             <Text sx={style.topHeader}>Contact us</Text>
             <Flex sx={style.saveContainer} onClick={savenclose}>
@@ -80,10 +72,13 @@ export function ContactUsModal({ closeParent, isOpen }) {
             </Flex>
           </Flex>
           <Flex
-            sx={merge(style.middleContainer, {
+            sx={{
+              flex: 1,
+              flexDirection: "column",
+              borderRadius: "8px",
               boxShadow: `0 0 4px 1px ${values.shadow_color}`,
               mt: "16px",
-            })}
+            }}
           >
             <Flex sx={style.titleContainer}>
               <Flex sx={{ flex: 1 }}>
@@ -154,7 +149,7 @@ export function ContactUsModal({ closeParent, isOpen }) {
               </Flex>
             </Flex>
           </Flex>
-        </Container>
+        </Flex>
       </ModalContent>
     </Modal>
   );
@@ -162,16 +157,19 @@ export function ContactUsModal({ closeParent, isOpen }) {
 
 const style = {
   container: {
-    p: "16px",
+    flexDirection:"column",
+    pb: "16px",
     backgroundColor: "white",
     borderRadius: "6px",
     height: "300px",
+    ml:["0px","0px","8px","8px","8px","8px"],
   },
   row1: {
+    marginRight: ["0px","0px","16px","16px","16px","16px"],
     justifyContent: "space-between",
     mt: "8px",
   },
-  row2: { mt: "16px" },
+  row2: { mt: "16px", },
   row3: { mt: "16px" },
   row4: {
     justifyContent: "center",
@@ -203,10 +201,11 @@ const style = {
     height: ["0px", "0px", "0px", "200px", "300px", "300px"],
   },
   topHeader: {
+    mt:"8px",
     fontFamily: "Poppins",
     color: "#D7354A",
     fontWeight: "Bold",
-    fontSize: "16px",
+    fontSize: "20px",
   },
   saveContainer: {
     flexDirection: "row",
@@ -215,6 +214,7 @@ const style = {
     cursor: "pointer",
   },
   save: {
+    mr:"4px",
     fontFamily: "Poppins",
     fontWeight: "bold",
     fontSize: "16px",
@@ -237,7 +237,6 @@ const style = {
 
   addlink: {
     flexDirection: "row",
-
     width: "100%",
   },
   leftContainer: {
@@ -245,12 +244,6 @@ const style = {
     width: "64px",
     height: "64px",
     mx: "8px",
-  },
-  middleContainer: {
-    flex: 1,
-
-    flexDirection: "column",
-    borderRadius: "8px",
   },
   rightContainer: {
     flexDirection: "column",

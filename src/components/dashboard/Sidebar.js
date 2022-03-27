@@ -1,19 +1,13 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx, Container, Flex, Image, Text, Box } from "theme-ui";
-import firebase from "firebase";
-import { auth, googleAuthProvider } from "../../lib/firebase";
-import { Button } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import { UserCard } from "./Sidebar/UserCard";
-import { UserSummary } from "./Sidebar/UserSummary";
-import { SocialHandles } from "./Sidebar/SocialHandles";
-import { AddButtons } from "./MainScreen/AddButtons";
-import React from "react";
-import { SocialModal } from "./Modals/SocialModal";
 import axios from "axios";
 import { nonauthapi } from "lib/api";
-
+import { useRouter } from "next/router";
+import React from "react";
+import { Flex } from "@chakra-ui/react";
+import { SocialModal } from "./Modals/SocialModal";
+import { SocialHandles } from "./Sidebar/SocialHandles";
+import { UserCard } from "./Sidebar/UserCard";
+import { UserSummary } from "./Sidebar/UserSummary";
+import sidebarStyles from "styles/Sidebar";
 // Add a custom Link
 export function Sidebar({
   socials,
@@ -51,20 +45,7 @@ export function Sidebar({
 
   return (
     <Flex
-      sx={{
-        flexDirection: "column",
-        width: ["100%", "100%", null],
-        mx: ["1rem", "1rem", "0px", "0px", "0px", "0px"],
-        borderRadius: "16px",
-        boxShadow: [
-          " ",
-          " ",
-          " ",
-          "0 0 4px 1px rgba(0, 0, 0, 0.5)",
-          "0 0 4px 1px rgba(0, 0, 0, 0.5)",
-          "0 0 4px 1px rgba(0, 0, 0, 0.5)",
-        ],
-      }}
+      sx={sidebarStyles.container}
     >
       <SocialModal
         isOpen={isOpenSocialModal}

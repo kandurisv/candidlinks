@@ -1,8 +1,6 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx, Button, Text } from "theme-ui";
-import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import { Fragment } from "react";
+import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
+import { Button, Text } from "@chakra-ui/react";
 
 const SlickArrow = ({ className, onClick, control }) => {
   return (

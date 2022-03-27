@@ -1,12 +1,9 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx, Container, Flex, Image, Text, Box } from "theme-ui";
-
+import React from "react";
+import { Flex } from "@chakra-ui/react";
+import { SocialHandles } from "./Sidebar/SocialHandles";
 import { UserCard } from "./Sidebar/UserCard";
 import { UserSummary } from "./Sidebar/UserSummary";
-import { SocialHandles } from "./Sidebar/SocialHandles";
-
-import React from "react";
+import sidebarStyles from "styles/Sidebar";
 
 // Add a custom Link
 export function Sidebar({ socials, user, summary }) {
@@ -16,20 +13,7 @@ export function Sidebar({ socials, user, summary }) {
 
   return (
     <Flex
-      sx={{
-        flexDirection: "column",
-        width: ["100%", "100%", null],
-        mx: ["1rem", "1rem", "0px", "0px", "0px", "0px"],
-        borderRadius: "16px",
-        boxShadow: [
-          " ",
-          " ",
-          " ",
-          "0 0 4px 1px rgba(0, 0, 0, 0.5)",
-          "0 0 4px 1px rgba(0, 0, 0, 0.5)",
-          "0 0 4px 1px rgba(0, 0, 0, 0.5)",
-        ],
-      }}
+      sx={sidebarStyles.container}
     >
       <UserCard data={user} />
       <UserSummary data={summary} />

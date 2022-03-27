@@ -1,34 +1,34 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx, Container, Flex, Image, Text, Grid, Box, merge } from "theme-ui";
-import { useRouter } from "next/router";
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
+  Box, Flex, Image, Input,
   Menu,
   MenuButton,
-  MenuList,
   MenuItem,
-  useToast,
+  MenuList,
+  Modal,
+  ModalContent,
+  ModalOverlay, Text, useMediaQuery,
+  useToast
 } from "@chakra-ui/react";
-import { BsCheckCircleFill, BsPlusCircleFill } from "react-icons/bs";
-import React, { useContext } from "react";
-import Lottie from "lottie-react";
-import smm from "../../../../public/lottie/smm.json";
-import { TextColorPicker } from "../AddElement/TextColorPicker";
-import { ShadowPicker } from "../AddElement/ShadowPicker";
-import { IoCloseCircle, IoCloseCircleOutline } from "react-icons/io5";
-import { Input, useMediaQuery } from "@chakra-ui/react";
-import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
-import { BiLink } from "react-icons/bi";
-import { BucketsModal } from "./BucketModal";
-import { nanoid } from "nanoid";
-import { authapi, s3url } from "lib/api";
-import { UserContext } from "lib/UserDataProvider";
 import axios from "axios";
-import { UploadImageToS3WithNativeSdk, uploadToS3 } from "lib/aws";
+import { authapi, s3url } from "lib/api";
+import { UploadImageToS3WithNativeSdk } from "lib/aws";
+import { UserContext } from "lib/UserDataProvider";
+import Lottie from "lottie-react";
+import { nanoid } from "nanoid";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import React, { useContext } from "react";
+import { BiLink } from "react-icons/bi";
+import { BsCheckCircleFill, BsPlusCircleFill } from "react-icons/bs";
+import { IoCloseCircle, IoCloseCircleOutline } from "react-icons/io5";
+import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
+import linksModalStyles from "styles/LinksModal";
+import isURL from "validator/lib/isURL";
+import smm from "../../../../public/lottie/smm.json";
+import { ShadowPicker } from "../AddElement/ShadowPicker";
+import { TextColorPicker } from "../AddElement/TextColorPicker";
+import { BucketsModal } from "./BucketModal";
+
 // Add a custom Link
 export function LinksModal({
   closeParent,
@@ -50,7 +50,6 @@ export function LinksModal({
   const [imageSelected, setImageSelected] = React.useState(false);
   const [sortId, setSortId] = React.useState(maxSortId + 1);
   const [signedURL, setSignedURL] = React.useState("");
-  const [isLargerThan480] = useMediaQuery("(min-width: 300px)");
   let hiddenInput = null;
 
   const [values, setValues] = React.useState({
@@ -162,48 +161,59 @@ export function LinksModal({
   };
 
   const closeModal = () => {
+    onRefresh();
     closeParent(true);
   };
 
   const savenadd = () => {
     if (values.title && values.link) {
-      const body = {
-        ...values,
-        photo: imageSelected ? s3url + imageName + ".png" : "",
-      };
+      if (isURL(values.link)) {
+        const body = {
+          ...values,
+          photo: imageSelected ? s3url + imageName + ".png" : "",
+        };
 
-      const options = {
-        headers: {
-          Authorization: `bearer ${cookie}`,
-          Origin: "localhost:3000",
-        },
-      };
+        const options = {
+          headers: {
+            Authorization: `bearer ${cookie}`,
+            Origin: "localhost:3000",
+          },
+        };
 
-      axios(
-        {
-          method: "post",
-          url: `${authapi}links`,
-          data: { links_array: JSON.stringify([body]) },
-          options: options,
-        },
-        { timeout: 5000 }
-      )
-        .then((res) => {
-          //   console.log("Sucess", res.data);
-          newItem(res.data);
-          setSortId((id) => id + 1);
-          toast({
-            title: "New Link Added",
-            description: "",
-            status: "success",
-            duration: 1000,
-            isClosable: true,
+        axios(
+          {
+            method: "post",
+            url: `${authapi}links`,
+            data: { links_array: JSON.stringify([body]) },
+            options: options,
+          },
+          { timeout: 5000 }
+        )
+          .then((res) => {
+            //   console.log("Sucess", res.data);
+            newItem(res.data);
+            setSortId((id) => id + 1);
+            toast({
+              title: "New Link Added",
+              description: "",
+              status: "success",
+              duration: 1000,
+              isClosable: true,
+            });
+            onRefresh();
+          })
+          .catch((e) => {
+            // console.log(e);
           });
-          onRefresh();
-        })
-        .catch((e) => {
-          // console.log(e);
+      } else {
+        toast({
+          title: "Link not valid",
+          description: "Please add a valid link",
+          status: "error",
+          duration: 1000,
+          isClosable: true,
         });
+      }
     } else {
       toast({
         title: "Title and Link are mandatory",
@@ -217,43 +227,53 @@ export function LinksModal({
 
   const savenclose = () => {
     if (values.title && values.link) {
-      const body = {
-        ...values,
-        photo: imageSelected ? s3url + imageName + ".png" : "",
-      };
+      if (isURL(values.link)) {
+        const body = {
+          ...values,
+          photo: imageSelected ? s3url + imageName + ".png" : "",
+        };
 
-      const options = {
-        headers: {
-          Authorization: `bearer ${cookie}`,
-          Origin: "localhost:3000",
-        },
-      };
+        const options = {
+          headers: {
+            Authorization: `bearer ${cookie}`,
+            Origin: "localhost:3000",
+          },
+        };
 
-      axios(
-        {
-          method: "post",
-          url: `${authapi}links`,
-          data: { links_array: JSON.stringify([body]) },
-          options: options,
-        },
-        { timeout: 1000 }
-      )
-        .then((res) => {
-          //     console.log("Sucess", res.data);
-          newItem(res.data);
-          setSortId((id) => id + 1);
-          toast({
-            title: "New Link Added",
-            description: "",
-            status: "success",
-            duration: 1000,
-            isClosable: true,
+        axios(
+          {
+            method: "post",
+            url: `${authapi}links`,
+            data: { links_array: JSON.stringify([body]) },
+            options: options,
+          },
+          { timeout: 1000 }
+        )
+          .then((res) => {
+            //     console.log("Sucess", res.data);
+            newItem(res.data);
+            setSortId((id) => id + 1);
+            toast({
+              title: "New Link Added",
+              description: "",
+              status: "success",
+              duration: 1000,
+              isClosable: true,
+            });
+            closeModal();
+          })
+          .catch((e) => {
+            // console.log(e);
           });
-          closeModal();
-        })
-        .catch((e) => {
-          // console.log(e);
+      } else {
+        toast({
+          title: "Link not valid",
+          description: "Please add a valid link",
+          status: "error",
+          duration: 1000,
+          isClosable: true,
         });
+      }
     } else {
       toast({
         title: "Title and Link are mandatory",
@@ -267,6 +287,7 @@ export function LinksModal({
 
   const onRefresh = () => {
     setImageName(nanoid());
+    setImage({ preview: "", raw: "" });
     setImageSelected(false);
     setValues({
       id: "",
@@ -293,40 +314,38 @@ export function LinksModal({
 
   return (
     <Flex>
-      <Head>
+      {/* <Head>
         <meta
           name="viewport"
           content="initial-scale=0.75, width=device-width"
         />
-      </Head>
+      </Head> */}
       <Modal onClose={closeModal} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent maxW={"1000px"}>
-          <Container sx={style.container}>
-            <Flex sx={style.row1}>
-              <Text sx={style.topHeader}>Enter Custom</Text>
-              <Flex sx={style.saveContainer} onClick={savenclose}>
-                <Text sx={style.save}>Save </Text>
+          <Flex sx={linksModalStyles.container}>
+            <Flex sx={linksModalStyles.row1}>
+              <Text sx={linksModalStyles.topHeader}>Enter Custom</Text>
+              <Flex sx={linksModalStyles.saveContainer} onClick={savenclose}>
+                <Text sx={linksModalStyles.save}>Save </Text>
                 <BsCheckCircleFill
                   color="#D7354A"
-                  size={15}
-                  sx={{ ml: "6px" }}
                 />
               </Flex>
             </Flex>
-            <Flex sx={style.row2}>
-              <Box sx={style.subHeaderContainer}>
-                <Text sx={style.subHeader}>Links</Text>
+            <Flex sx={linksModalStyles.row2}>
+              <Box sx={linksModalStyles.subHeaderContainer}>
+                <Text sx={linksModalStyles.subHeader}>Links</Text>
               </Box>
             </Flex>
-            <Flex sx={style.row3}>
-              <Flex sx={style.lottie}>
+            <Flex sx={linksModalStyles.row3}>
+              <Flex sx={linksModalStyles.lottie}>
                 <Lottie animationData={smm} />
               </Flex>
-              <Flex sx={style.linkView}>
-                <Flex sx={style.addlink}>
-                  <Flex sx={style.leftContainer}>
-                    <Flex sx={style.imageContainer}>
+              <Flex sx={linksModalStyles.linkView}>
+                <Flex sx={linksModalStyles.addlink}>
+                  <Flex sx={linksModalStyles.leftContainer}>
+                    <Flex sx={linksModalStyles.imageContainer}>
                       {image.preview ? (
                         <Flex
                           sx={{
@@ -384,11 +403,14 @@ export function LinksModal({
                     </Flex>
                   </Flex>
                   <Flex
-                    sx={merge(style.middleContainer, {
+                    sx={{
+                      flex: 1,
+                      flexDirection: "column",
+                      borderRadius: "8px",
                       boxShadow: `0 0 4px 1px ${values.shadow_color}`,
-                    })}
+                    }}
                   >
-                    <Flex sx={style.titleContainer}>
+                    <Flex sx={linksModalStyles.titleContainer}>
                       <Flex sx={{ flex: 1 }}>
                         <Flex
                           sx={{
@@ -416,7 +438,7 @@ export function LinksModal({
                         />
                       </Flex>
                     </Flex>
-                    <Flex sx={style.titleContainer}>
+                    <Flex sx={linksModalStyles.titleContainer}>
                       <Flex sx={{ flex: 1 }}>
                         <Flex
                           sx={{
@@ -439,7 +461,7 @@ export function LinksModal({
                         />
                       </Flex>
                     </Flex>
-                    <Flex sx={style.pickerContainer}>
+                    <Flex sx={linksModalStyles.pickerContainer}>
                       <Flex sx={{ flex: 2, mr: "16px" }}>
                         <Menu>
                           <BucketsModal
@@ -494,162 +516,22 @@ export function LinksModal({
                       </Flex>
                     </Flex>
                   </Flex>
-                  <Flex sx={style.rightContainer}>
-                    <Flex sx={style.delete} onClick={onRefresh}>
+                  <Flex sx={linksModalStyles.rightContainer}>
+                    <Flex sx={linksModalStyles.delete} onClick={onRefresh}>
                       <IoCloseCircleOutline size={20} />
                     </Flex>
                   </Flex>
                 </Flex>
               </Flex>
             </Flex>
-            <Flex sx={style.row4}>
+            <Flex sx={linksModalStyles.row4}>
               <Flex onClick={savenadd} sx={{ cursor: "pointer" }}>
                 <BsPlusCircleFill color="#D7354A" size="32px" sx={{}} />
               </Flex>
             </Flex>
-          </Container>
+          </Flex>
         </ModalContent>
       </Modal>
     </Flex>
   );
 }
-
-const style = {
-  container: {
-    flexDirection: "column",
-    p: "16px",
-    backgroundColor: "white",
-    borderRadius: "6px",
-  },
-  row1: {
-    justifyContent: "space-between",
-    mt: "8px",
-  },
-  row2: { mt: "16px" },
-  row3: { mt: "16px" },
-  row4: {
-    justifyContent: "center",
-    alignItems: "center",
-    mb: "24px",
-    mt: "16px",
-    ml: ["50px", "50px", "50px", "250px", "250px", "250px"],
-  },
-  addNew: {
-    justifyContent: "center",
-    alignItems: "center",
-    textAlign: "center",
-    cursor: "pointer",
-    backgroundColor: "#D7354A",
-    borderRadius: "48px",
-    borderColor: "#D7354A",
-    width: "48px",
-    height: "48px",
-  },
-  addNewText: {
-    color: "white",
-    fontWeight: "medium",
-    fontFamily: "Poppins",
-    fontSize: "32px",
-    textAlign: "center",
-  },
-  lottie: {
-    width: ["0px", "0px", "0px", "200px", "300px", "300px"],
-    height: ["0px", "0px", "0px", "200px", "300px", "300px"],
-  },
-  topHeader: {
-    fontFamily: "Poppins",
-    color: "#D7354A",
-    fontWeight: "Bold",
-    fontSize: "16px",
-  },
-  saveContainer: {
-    mx: "4px",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    cursor: "pointer",
-  },
-  save: {
-    fontFamily: "Poppins",
-    fontWeight: "bold",
-    fontSize: "16px",
-  },
-  subHeaderContainer: {
-    width: "50%",
-    borderBottomWidth: 2,
-    borderBottomColor: "#D7354A",
-  },
-  subHeader: {
-    fontFamily: "Poppins",
-    fontWeight: "bold",
-    fontSize: "24px",
-  },
-  linkView: {
-    pl: "16px",
-    pr: "16px",
-    flex: 1,
-  },
-
-  addlink: {
-    flexDirection: "row",
-    width: "100%",
-  },
-  leftContainer: {
-    flexDirection: "column",
-    width: "64px",
-    height: "64px",
-    mx: "8px",
-  },
-  middleContainer: {
-    flex: 1,
-
-    flexDirection: "column",
-    borderRadius: "8px",
-  },
-  rightContainer: {
-    flexDirection: "column",
-    ml: "8px",
-  },
-  imageContainer: {},
-  addImage: {},
-  titleContainer: {
-    flexDirection: "row",
-  },
-
-  dragIcon: {
-    cursor: "grab",
-    p: "8px",
-    backgroundColor: "gray",
-  },
-  link: {},
-  bucket: {},
-  delete: {
-    cursor: "pointer",
-    mt: "8px",
-    p: "2px",
-  },
-  pickerContainer: {
-    flexDirection: ["column", "column", "row", "row", "row", "row"],
-
-    mx: ["8px", "8px", "32px", "32px", "32px", "32px"],
-    py: ["2px", "2px", "8px", "8px", "8px", "8px"],
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    // justifyContent: ["flex-start","flex-start","center","center","center","center"],
-    // alignItems: ["flex-start","flex-start","center","center","center","center"],
-  },
-  titleContainer: {
-    width: "100%",
-    height: "48px",
-    mt: "8px",
-    pr: "8px",
-  },
-  imageContainer: {
-    width: "100%",
-    height: "100%",
-    borderRadius: "100%",
-    borderWidth: 1,
-    position: "relative",
-    cursor: "pointer",
-  },
-};

@@ -1,35 +1,23 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx, Container, Flex, Image, Text, Divider } from "theme-ui";
-import { Button } from "@chakra-ui/react";
-import Head from "next/head";
-
-import React, { useContext, useState, useEffect } from "react";
-// import { UserContext } from "../../src/lib/UserDataProvider";
-import UserDataProvider, { UserContext } from "lib/UserDataProvider";
-import { auth, firebaseConfig1, firestore } from "lib/firebase";
+import { Divider, Flex } from "@chakra-ui/react";
 import Header from "components/dashboard/header";
-import { Sidebar } from "components/dashboard/Sidebar";
 import { MainScreen } from "components/dashboard/MainScreen";
 import { MenuPopup } from "components/dashboard/MenuPopup";
-import nookies from "nookies";
-
-import {
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuDivider,
-} from "@chakra-ui/react";
-
-import axios from "axios";
+import { Sidebar } from "components/dashboard/Sidebar";
 import { authapi, nonauthapi } from "lib/api";
-import { convertChangesToDMP } from "prettier";
+import { auth } from "lib/firebase";
 import { firebaseAdmin } from "lib/firebaseadmin";
-// import { firebaseAdmin } from "lib/firebaseadmin";
+import Head from "next/head";
+import nookies from "nookies";
+import { useState, useEffect } from "react";
+import isURL from "validator/lib/isURL";
+import dashboardStyles from "styles/Dashboard";
+import dynamic from "next/dynamic";
+
+const DynamicIntro = dynamic(() => import("../../src/components/dashboard/Intro"), {
+  ssr: false,
+  loading: () => <div>...</div>
+});
+
 export default function Dashboard({
   links,
   recos,
@@ -39,11 +27,12 @@ export default function Dashboard({
   currentUser,
   cookies,
   masterSocials,
+  linkAnalytics,
+  prodAnalytics,
 }) {
-  const [userDataContext] = useContext(UserContext);
+  const [menuClick, setMenuClick] = useState(false);
+  const [summary, setSummary] = useState({});
 
-  const [menuClick, setMenuClick] = React.useState(false);
-  const [summary, setSummary] = React.useState({});
   // auth.signOut();
   // React.useEffect(() => {
   //   console.log(
@@ -74,8 +63,11 @@ export default function Dashboard({
   //   socials,
   //   links,
   // ]);
-  React.useEffect(() => {
-    setSummary({ products: recos.length, links: links.length });
+  useEffect(() => {
+    setSummary({
+      products: recos.filter((item) => isURL(item.prod_link) == true).length,
+      links: links.filter((item) => isURL(item.link) == true).length,
+    });
 
     auth.onAuthStateChanged((user) => {
       localStorage.setItem("jwt", user.toJSON().stsTokenManager.accessToken);
@@ -96,17 +88,20 @@ export default function Dashboard({
   return (
     <div>
       <Head>
-        <title>Dashboard</title>
+        <title>Candid Dashboard</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
+        <link rel="icon" href={user[0].u_profile_image} />
       </Head>
       <Header
         menu={(item) => menuActivate(item)}
         menuActive={menuClick}
         data={user}
       />
+      { ( links.length === 0 && recos.length === 0 && socials.length === 0 ) ? <DynamicIntro/> : <></>}
+      <Divider />
       {menuClick ? <MenuPopup /> : null}
-      <Flex as="container" sx={styles.container}>
-        <Flex as="sidebar" sx={styles.sidebar}>
+      <Flex as="container" sx={dashboardStyles.container}>
+        <Flex as="sidebar" sx={dashboardStyles.sidebar} id="sidebar">
           <Sidebar
             socials={socials}
             user={user}
@@ -116,13 +111,15 @@ export default function Dashboard({
             masterSocials={masterSocials}
           />
         </Flex>
-        <Flex as="mainscreen" sx={styles.mainscreen}>
+        <Flex as="mainscreen" sx={dashboardStyles.mainscreen}>
           <MainScreen
             links={links}
             recos={recos}
             buckets={buckets[0].u_buckets}
             user={user}
             cookie={cookies[0]}
+            linkAnalytics={linkAnalytics}
+            prodAnalytics={prodAnalytics}
           />
         </Flex>
       </Flex>
@@ -162,15 +159,7 @@ export async function getServerSideProps(context) {
       };
     }
   }
-  // if(currentUser.length!==0 && ){
-  //   return {
-  //     redirect: {
-  //       destination: '/onboard',
-  //       permanent: false,
-  //     },
-  //   }
-  // }
-  // console.log("asdf", currentUser[0]);
+
   if (!currentUser[0]) {
     return {
       redirect: {
@@ -187,6 +176,8 @@ export async function getServerSideProps(context) {
     { value: buckets, reason: bucketsError },
     { value: user, reason: userError },
     { value: masterSocials, reason: masterSocialsError },
+    { value: linkAnalytics, reason: linkAnalyticsError },
+    { value: prodAnalytics, reason: prodAnalyticsError },
   ] = await Promise.allSettled(
     [
       fetch(nonauthapi + "links" + "?u_id=" + currentUser[0]),
@@ -195,10 +186,12 @@ export async function getServerSideProps(context) {
       fetch(nonauthapi + "buckets" + "?u_id=" + currentUser[0]),
       fetch(nonauthapi + "user" + "?u_id=" + currentUser[0]),
       fetch(authapi + "socials/master"),
+      fetch(authapi + "analytics/link" + "?u_id=" + currentUser[0]),
+      fetch(authapi + "analytics/prod" + "?u_id=" + currentUser[0]),
     ].map((fetchApi) => fetchApi.then((res) => res.json()))
   );
 
-  console.log(currentUser[0], buckets);
+  // console.log(currentUser[0], buckets);
 
   return {
     props: {
@@ -210,110 +203,8 @@ export async function getServerSideProps(context) {
       currentUser,
       cookies,
       masterSocials,
+      linkAnalytics,
+      prodAnalytics,
     },
   };
 }
-
-const styles = {
-  container: {
-    // backgroundColor:'green',
-    mt: ["", "", "100px", "100px", "100px", "100px"],
-    flex: 1,
-    maxWidth: "100%",
-    display: "flex",
-    flexDirection: ["column", "column", "row", "row", "row", "row"],
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-  },
-  mainscreen: {
-    width: ["100%", "100%", null],
-    flex: [1, 1, 1, 2, 2, 2],
-  },
-  sidebar: {
-    // mt: "96px",
-    width: "100%",
-    // backgroundColor:'red',
-    flex: 1,
-    pl: "8px",
-    pt: "16px",
-    alignItems: "center",
-    justifyContent: "center",
-    position: "sticky",
-    bottom: "8px",
-    alignSelf: "flex-end",
-  },
-  headerBtn: {
-    backgroundColor: "#f29183",
-    fontSize: "16px",
-    fontWeight: "normal",
-    letterSpacing: "-0.16px",
-    borderRadius: "6px",
-    color: "#ffffff",
-    borderWidth: "4px",
-    borderColor: "black",
-    padding: "4.0px 16px",
-    display: ["none", null, null, null, "inline-block"],
-    ml: ["0", null, null, "auto", "0"],
-    mr: ["0", null, null, "16px", "0"],
-    transition: "all 500ms ease",
-    "&:hover": {
-      color: "#fff",
-      backgroundColor: "secondary",
-    },
-  },
-  blogBtn: {
-    backgroundColor: "#d95f76",
-    fontSize: "16px",
-    fontWeight: "bold",
-    letterSpacing: "-0.16px",
-    borderRadius: "8px",
-    color: "#ffffff",
-    padding: "8px 24px",
-    display: ["none", null, null, null, "inline-block"],
-    ml: ["0", null, null, "auto", "0"],
-    mr: ["16px", "16px", "16px", "16px", "0"],
-    transition: "all 500ms ease",
-    "&:hover": {
-      color: "#fff",
-      backgroundColor: "secondary",
-    },
-  },
-
-  header: {
-    color: "text_white",
-    fontWeight: "normal",
-    py: "16px",
-    width: "100%",
-    backgroundColor: "#fff",
-    transition: "all 0.4s ease",
-    borderBottom: "1px solid #E9EDF5",
-    position: "fixed",
-    top: 0,
-    left: 0,
-
-    "&.sticky": {
-      backgroundColor: "background",
-      color: "text",
-      py: "16px",
-      boxShadow: "0 1px 2px rgba(0, 0, 0, 0.06)",
-    },
-  },
-  logoContainer: {},
-  signoutContainer: {
-    loginBtn: {
-      ml: "auto",
-      display: "inline-flex",
-      alignItems: "center",
-      fontSize: "16px",
-      color: "#0F2137",
-      fontWeight: 500,
-      mr: "16px",
-      img: {
-        mr: "8px",
-      },
-      text: {
-        color: "green",
-      },
-    },
-  },
-};

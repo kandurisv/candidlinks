@@ -1,26 +1,20 @@
 import {
-	Input,
-	Heading,
-	Text,
 	Button,
-	Flex,
-	Image,
-	Textarea,
-	FormLabel,
-	useToast,
+	Flex, FormLabel, Heading, Image, Input, Text, Textarea, useToast
 } from '@chakra-ui/react';
-import { useEffect, useState, useContext } from 'react';
-import { auth, firestore } from 'lib/firebase';
-import { UserContext } from 'lib/UserDataProvider';
-import { Layout } from 'components/onboard/Layout';
-import { useRouter } from 'next/router';
 import axios from 'axios';
-import { UploadImageToS3WithNativeSdk } from 'lib/aws';
+import { Layout } from 'components/onboard/Layout';
 import { authapi, nonauthapi, s3url } from 'lib/api';
-import { IoCloseCircle } from 'react-icons/io5';
+import { UploadImageToS3WithNativeSdk } from 'lib/aws';
 import { firebaseAdmin } from 'lib/firebaseadmin';
-import nookies from 'nookies';
+import { UserContext } from 'lib/UserDataProvider';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import nookies from 'nookies';
+import { useContext, useEffect, useState } from 'react';
+import { IoCloseCircle } from 'react-icons/io5';
+import editStyles from 'styles/edit';
+
 const EditProfile = ({ u_data }) => {
 	const [state, setState] = useState({
 		name: '',
@@ -91,7 +85,7 @@ const EditProfile = ({ u_data }) => {
 			u_about: u_data[0].u_about === state.about ? u_data[0].u_about : state.about,
 			u_profile_image: u_data[0].u_profile_image === image.preview ? u_data[0].u_profile_image : new_profile_image,
 		};
-		console.log(u_update);
+		// console.log(u_update);
 
 		// API Call: Update User Data
 		axios(
@@ -103,7 +97,7 @@ const EditProfile = ({ u_data }) => {
 			},
 			{ timeout: 5000 }
 		).then((res) => {
-			console.log('Success', res.data);
+			// console.log('Success', res.data);
 			toast({
 				title: 'Profile Updated',
 				description: '',
@@ -190,8 +184,8 @@ const EditProfile = ({ u_data }) => {
 							placeholder='Tell us about you'
 						/>
 						<FormLabel fontSize={'lg'}>Profile Image</FormLabel>
-						<Flex sx={style.leftContainer}>
-							<Flex sx={style.imageContainer}>
+						<Flex sx={editStyles.leftContainer}>
+							<Flex sx={editStyles.imageContainer}>
 								{image.preview ? (
 									<Flex
 										sx={{
@@ -272,29 +266,6 @@ const EditProfile = ({ u_data }) => {
 	);
 };
 
-const style = {
-	imageContainer: {
-		width: '100%',
-		height: '100%',
-		borderRadius: '100%',
-		borderColor: '#C23043',
-		_hover: { bg: 'gray.50' },
-		borderWidth: 1,
-		position: 'relative',
-		cursor: 'pointer',
-	},
-	leftContainer: {
-		margin: '20px',
-		justifyContent: 'center',
-		alignItems: 'center',
-		width: '250px',
-		height: '250px',
-		mx: '18%',
-	},
-};
-
-export default EditProfile;
-
 export async function getServerSideProps(context) {
 	const cookie = nookies.get(context).token;
 	// console.log('c',cookie)
@@ -329,3 +300,5 @@ export async function getServerSideProps(context) {
 		props: { u_data },
 	};
 }
+
+export default EditProfile;

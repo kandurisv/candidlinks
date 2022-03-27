@@ -1,6 +1,4 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx, Box, Text } from "theme-ui";
+import { Box, Text } from "@chakra-ui/react";
 
 const ServiceCard = ({ service }) => {
   return (

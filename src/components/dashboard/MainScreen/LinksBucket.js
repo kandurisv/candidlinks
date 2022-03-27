@@ -1,62 +1,79 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx, Container, Flex, Image, Text, Grid, merge } from "theme-ui";
-import firebase from "firebase";
-import { auth, googleAuthProvider } from "../../../lib/firebase";
-import { Button } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { ProductsCard } from "./ProductsCard";
+import { Container, Divider, Flex, Text, useMediaQuery } from "@chakra-ui/react";
 import { LinksCard } from "./LinksCard";
-
+import linksBucketStyles from "styles/LinksBucket";
 // Add a custom Link
-export function LinksBucket({ bucketName, data, link }) {
+export function LinksBucket({
+  bucketName,
+  data,
+  link,
+  deleteItem,
+  editLinkModal,
+}) {
   const router = useRouter();
-
+  const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
+  
   const bucketLinkClick = () => {
-    console.log("link click", link.link);
-    window.open(link.link, "_blank");
+    // console.log("link click", link.link);
+    if (link.link.substring(0, 8) !== "https://") {
+      window.open("https://" + link.link, "_blank");
+    } else {
+      window.open(link.link, "_blank");
+    }
   };
 
   return (
-    <Container sx={style.container}>
+    <Flex sx={linksBucketStyles.container}>
       <Flex
         sx={{
-          cursor: link.link ? "pointer" : "default",
+          justifyContent:["center","center","left","left","left","left"],
+          cursor:
+            link && link.length != 0 && link.link && isURL(link.link.toString())
+              ? "pointer"
+              : "default",
           backgroundColor: "white",
         }}
-        onClick={link.link ? bucketLinkClick : null}
+        onClick={
+          link && link.length != 0 && link.link && isURL(link.link.toString())
+            ? bucketLinkClick
+            : null
+        }
       >
         <Text
-          sx={merge(style.heading, {
-            color: link.link ? "#2A5DB0" : "#323232",
-          })}
+          sx={{
+            fontFamily: "Poppins",
+            fontWeight: "bold",
+            fontSize: "18px",
+            py: "4px",
+            color:
+              link &&
+              link.length != 0 &&
+              link.link &&
+              isURL(link.link.toString())
+                ? "#2A5DB0"
+                : "#323232",
+          }}
         >
           {bucketName}
         </Text>
       </Flex>
-      <Flex sx={style.grid}>
+      <Divider display={isLargerThan768 ? "none" : "block"}/>
+      <Flex sx={linksBucketStyles.grid}>
         {data.map((item, index) => {
-          return <LinksCard key={index} item={item} />;
+          return (
+            <LinksCard
+              key={index}
+              item={item}
+              deleteItem={(item) => {
+                // console.log("linksbucket", item);
+                deleteItem(item);
+              }}
+              editLinkModal={(item) => editLinkModal(item)}
+            />
+          );
         })}
       </Flex>
-    </Container>
+    </Flex>
+    
   );
 }
-
-const style = {
-  container: {
-    my: "8px",
-    width: "100%",
-    backgroundColor: "white",
-  },
-  grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
-  heading: {
-    fontFamily: "Poppins",
-    fontWeight: "bold",
-    fontSize: "24px",
-    py: "8px",
-  },
-};

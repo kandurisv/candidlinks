@@ -1,11 +1,8 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx, Container, Flex, Image, Text, Grid } from "theme-ui";
-import firebase from "firebase";
-import { auth, googleAuthProvider } from "../../../lib/firebase";
-import { Button } from "@chakra-ui/react";
+import { Flex, Image, Text, Tooltip } from "@chakra-ui/react";
+import { event } from "analytics/ga";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import productsCardStyles from "styles/ProductsCard";
 
 // Add a custom Link
 export function ProductsCard({ item }) {
@@ -15,110 +12,48 @@ export function ProductsCard({ item }) {
     // console.log("add links");
   };
 
+  useEffect(() => {
+    event("PRODUCT_EXTENSION", item);
+  }, []);
+
   const buy = () => {
-    // console.log(item);
+    event("PRODUCT_CLICK", item);
     localStorage.setItem("buyLatestItem", item.prod_name);
-    window.open(item.prod_link, "_blank"); //to open new page
+    if (item.prod_link.substring(0, 8) !== "https://") {
+      window.open("https://" + item.prod_link, "_blank");
+    } else {
+      window.open(item.prod_link, "_blank");
+    }
   };
 
   return (
-    <Flex sx={style.container}>
-      <Flex sx={style.imageMaster}>
-        <Flex sx={style.imageContainer}>
-          <Image
-            src={item.photo || "/user/mobile.png"}
-            alt="img"
-            sx={style.image}
-          />
-        </Flex>
-      </Flex>
-      <Flex sx={style.detailsContainer}>
-        <Flex sx={style.content}>
-          <Text sx={style.product}>{item.prod_name}</Text>
-          <Text sx={style.category}>{item.cat_name}</Text>
-        </Flex>
-        <Flex sx={style.buttonContainer}>
-          <Flex sx={style.button} onClick={buy}>
-            <Text sx={style.buttonText}>Buy Now</Text>
+    <Tooltip label={item.prod_link.substring(0, 100) + ".."} placement="top">
+      <Flex sx={productsCardStyles.container} onClick={buy}>
+        <Flex sx={productsCardStyles.imageMaster}>
+          <Flex sx={productsCardStyles.imageContainer}>
+            <Image
+              src={item.photo || "/user/mobile.png"}
+              alt="img"
+              sx={productsCardStyles.image}
+            />
           </Flex>
         </Flex>
+        <Flex sx={productsCardStyles.categoryDetailsContainer}>
+          <Flex sx={productsCardStyles.categoryContent}>
+            <Text sx={productsCardStyles.category}>{item.cat_name}</Text>
+          </Flex>
+        </Flex>
+        <Flex sx={productsCardStyles.detailsContainer}>
+          <Flex sx={productsCardStyles.content}>
+            <Text sx={productsCardStyles.product}>{item.prod_name}</Text>
+          </Flex>
+          {/* <Flex sx={productsCardStyles.buttonContainer}>
+          <Flex sx={productsCardStyles.button} onClick={buy}>
+            <Text sx={productsCardStyles.buttonText}>Buy Now</Text>
+          </Flex>
+        </Flex> */}
+        </Flex>
       </Flex>
-    </Flex>
+    </Tooltip>
   );
 }
-
-const style = {
-  container: {
-    flexDirection: "row",
-    p: "8px",
-    py: "16px",
-    backgroundColor: "white",
-    borderRadius: "16px",
-    boxShadow: "0 0 4px 1px rgba(0, 0, 0, 0.1)",
-    mx: "16px",
-    width: ["100%", "100%", "350px", "350px", "448px", "448px"],
-    minWidth: "330px",
-    my: "16px",
-  },
-  imageMaster: {
-    backgroundColor: "white",
-  },
-  imageContainer: {
-    mx: "8px",
-    backgroundColor: "white",
-  },
-  image: {
-    height: "96px",
-    width: "148px",
-    borderRadius: "6px",
-  },
-  detailsContainer: {
-    backgroundColor: "white",
-    flexDirection: "column",
-    ml: "8px",
-    width: "248px",
-    justifyContent: "space-between",
-    py: "8px",
-  },
-  buttonText: {
-    width: "100%",
-    height: "100%",
-    backgroundColor: "transparent",
-    borderWidth: "0px",
-    color: "white",
-    fontWeight: "medium",
-    fontFamily: "Poppins",
-    fontSize: "16px",
-    cursor: "pointer",
-    textAlign: "center",
-  },
-  button: {
-    backgroundColor: "#D7354A",
-    borderRadius: "24px",
-    borderColor: "#D7354A",
-    py: "4px",
-    width: "148px",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  content: {
-    flexDirection: "column",
-  },
-  buttonContainer: {
-    justifyContent: "center",
-    width: "100%",
-  },
-  product: {
-    fontFamily: "Poppins",
-    fontWeight: "medium",
-    fontSize: "24px",
-    color: "#000",
-  },
-  category: {
-    fontFamily: "Poppins",
-    fontWeight: "medium",
-    fontSize: "16px",
-    color: "#D7354A",
-  },
-  buynow: {},
-};

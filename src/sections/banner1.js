@@ -1,24 +1,11 @@
-import React from "react";
-import Image from "next/image";
-import {
-  Box,
-  Container,
-  Flex,
-  Heading,
-  Text,
-  Label,
-  Input,
-  Button,
-  Link,
-} from "theme-ui";
-
-import client1 from "assets/client-1.svg";
-import client2 from "assets/client-2.svg";
-import client3 from "assets/client-3.svg";
+import { Box, Button, Flex, Heading, Input, Label, Text } from "@chakra-ui/react";
 import sectionImage from "assets/banner-1.svg";
-import { useRouter } from "next/router";
 import axios from "axios";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import React from "react";
 import { translation } from "translation";
+
 
 const Banner1 = () => {
   const { locale } = useRouter();
@@ -52,7 +39,7 @@ const Banner1 = () => {
   const { title, text, clients, image, subcontent } = BANNER_DATA;
   return (
     <Box as="section" id="banner" sx={styles.section}>
-      <Container sx={styles.container}>
+      <Flex sx={styles.container}>
         <Flex sx={styles.flex}>
           <Box sx={styles.content}>
             <Heading as="h2">{title}</Heading>
@@ -102,7 +89,7 @@ const Banner1 = () => {
             <Image src={image} width="740" height="558" alt="section image" />
           </Box>
         </Flex>
-      </Container>
+      </Flex>
     </Box>
   );
 };
@@ -117,7 +104,7 @@ const styles = {
     pb: ["72px", null, null, null, "96px"],
   },
   container: {
-    maxWidth: ["100%", null, null, null, null, "1172px", "1280px"],
+    flexDirection: "column",
     position: "relative",
   },
   flex: {

@@ -1,11 +1,14 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx, Container, Flex, Image, Text, Grid } from "theme-ui";
+import { Button, Flex, Image, SimpleGrid, Text } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { BsPlusCircleFill } from "react-icons/bs";
+import { event } from "analytics/ga";
+import socialHandlesStyles from "styles/SocialHandles";
 
 const SocialElement = ({ item }) => (
   <Flex
-    sx={style.socialView}
+    sx={socialHandlesStyles.socialView}
     onClick={() => {
+      event("SOCIAL_HANDLE_CLICK", item);
       // console.log(item);
       localStorage.setItem(
         "clickLatestSocial",
@@ -14,12 +17,8 @@ const SocialElement = ({ item }) => (
       window.open(item.social_ulink + item.u_name, "_blank"); //to open new page
     }}
   >
-    <Image
-      src={item.social_logo}
-      alt="Logo for Social Network Websites"
-      sx={style.social}
-    />
-    <Text sx={style.socialText}>
+    <Image src={item.social_logo} alt={"social logo"} sx={socialHandlesStyles.social} />
+    <Text sx={socialHandlesStyles.socialText}>
       {item && item.social_name && item.social_name.length > 9
         ? item.social_name.slice(0, 10) + ".."
         : item.social_name}
@@ -28,65 +27,23 @@ const SocialElement = ({ item }) => (
 );
 
 // Add a custom Link
-export function SocialHandles({ data }) {
+export function SocialHandles({ social, data }) {
+  const router = useRouter();
+
+  const addSocial = () => {
+    social();
+  };
+
   return (
     <Flex
-      sx={{
-        width: "100%",
-        px: "10%",
-        // ml: ["0%", "0%", "10%", "10%", "10%", "10%"],
-        // mr: ["0%", "10%", "10%", "10%", "10%", "10%"],
-        my: "8px",
-        flexDirection: "column",
-      }}
+      sx={socialHandlesStyles.container}
     >
-      <Text sx={style.heading}>Social Handles</Text>
-      <Grid gap={2} columns={[3, 6, 6, 6, 6, 6]} sx={style.grid}>
+      {/* <Text sx={socialHandlesStyles.heading}>Social Handles</Text> */}
+      <SimpleGrid gap={2} columns={[5, 5, 5, 5, 5, 5]} sx={socialHandlesStyles.grid}>
         {data.map((item, index) => {
           return <SocialElement item={item} key={index} />;
         })}
-      </Grid>
+      </SimpleGrid>
     </Flex>
   );
 }
-
-const style = {
-  grid: {},
-  heading: {
-    fontFamily: "Poppins",
-    fontWeight: "bold",
-    fontSize: "24px",
-    py: "8px",
-  },
-  socialView: {
-    ml: ["50px", "50px", "50px", "10px", "10px", "10px"],
-    textAlign: "center",
-    cursor: "pointer",
-    justifyContent: "center",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  social: {
-    width: "24px",
-    height: "24px",
-  },
-  socialText: {
-    fontFamily: "Poppins",
-    fontSize: "8px",
-    color: "#646464",
-    textAlign: "center",
-  },
-  addbutton: {
-    cursor: "pointer",
-    backgroundColor: "transparent",
-  },
-  addContainer: {
-    textAlign: "center",
-  },
-  addbuttonText: {
-    fontFamily: "Poppins",
-    fontWeight: "bold",
-    fontSize: "12px",
-    color: "#FFFFFF",
-  },
-};

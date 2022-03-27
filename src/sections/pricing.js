@@ -1,12 +1,9 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx, Box, Container } from "theme-ui";
-import Slider from "react-slick";
-import SectionHeading from "components/section-heading";
 import PriceTable from "components/price-table";
+import SectionHeading from "components/section-heading";
 import SlickArrow from "components/slick-arrow";
-import { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } from "react/cjs/react.production.min";
 import { useRouter } from "next/router";
+import Slider from "react-slick";
+import { Box, Flex } from "@chakra-ui/react";
 import { translation } from "translation";
 
 const data = [
@@ -352,7 +349,7 @@ const Pricing = () => {
   ];
   return (
     <Box as="section" id="pricing" sx={styles.section}>
-      <Container sx={styles.container}>
+      <Flex sx={styles.container}>
         <SectionHeading
           sx={styles.heading}
           slogan="Deals for you"
@@ -363,7 +360,7 @@ const Pricing = () => {
             <PriceTable price={price} key={index} />
           ))}
         </Slider>
-      </Container>
+      </Flex>
     </Box>
   );
 };
@@ -376,6 +373,7 @@ const styles = {
     pb: [12, null, null, 15, 17],
   },
   container: {
+    flexDirection:"column",
     pl: 0,
     pr: 0,
   },

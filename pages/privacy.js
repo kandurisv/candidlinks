@@ -1,22 +1,18 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx, Flex, Text, ThemeProvider } from "theme-ui";
-
-import theme from "theme";
-
 import SEO from "components/seo";
+import { Flex, Text } from "@chakra-ui/react";
+import privacyStyles from "styles/privacy";
+// import { BetaAnalyticsDataClient } from "@google-analytics/data";
 
 function Privacypolicy() {
   return (
-    <ThemeProvider theme={theme}>
+    <Flex>
       <SEO
         title="Candid Reviews - Privacy Policy"
         description="This page contains the privacy policy of the Candid Reviews App. By downloading the app, you are accepting candid reviews privacy policy."
       />
-
-      <Flex sx={styles.container}>
-        <Text sx={styles.heading}>Privacy Policy</Text>
-        <Flex sx={styles.subContainer}>
+      <Flex sx={privacyStyles.container}>
+        <Text sx={privacyStyles.heading}>Privacy Policy</Text>
+        <Flex sx={privacyStyles.subContainer}>
           <p>
             Mish Fit built the Candid Reviews app as a Free app. This SERVICE is
             provided by Mish Fit at no cost and is intended for use as is. This
@@ -158,36 +154,82 @@ function Privacypolicy() {
           </p>
         </Flex>
       </Flex>
-    </ThemeProvider>
+    </Flex>
   );
 }
 
-export default Privacypolicy;
+// export async function getServerSideProps(context) {
+//   const analyticsDataClient = new BetaAnalyticsDataClient();
 
-const styles = {
-  container: {
-    px: "16px",
-    py: "16px",
-    flexDirection: "column",
-  },
-  subContainer: {
-    mt: "16px",
-    flexDirection: "column",
-  },
-  heading: {
-    fontFamily: "Poppins",
-    fontSize: "48px",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  subHeading: {
-    fontFamily: "Poppins",
-    fontSize: "18px",
-    fontWeight: "medium",
-  },
-  text: {
-    fontFamily: "Poppins",
-    fontSize: "16px",
-    fontWeight: "normal",
-  },
-};
+//   try {
+//     const [linkResponse] = await analyticsDataClient.runReport({
+//       property: `properties/307191351`,
+//       dateRanges: [
+//         {
+//           startDate: "2022-03-01",
+//           endDate: "today",
+//         },
+//       ],
+//       dimensions: [
+//         {
+//           name: "customEvent:u_id",
+//         },
+//         {
+//           name: "customEvent:bucket",
+//         },
+//         {
+//           name: "customEvent:title",
+//         },
+//         {
+//           name: "customEvent:font_color",
+//         },
+//         {
+//           name: "customEvent:shadow_color",
+//         },
+//         {
+//           name: "eventName",
+//         },
+//       ],
+//       metrics: [
+//         {
+//           name: "eventCount",
+//         },
+//       ],
+//       dimensionFilter: {
+//         andGroup: {
+//           expressions: [
+//             {
+//               filter: {
+//                 fieldName: "eventName",
+//                 inListFilter: {
+//                   values: ["LINK_CLICK", "LINK_EXTENSION"],
+//                 },
+//               },
+//             },
+//             {
+//               notExpression: {
+//                 filter: {
+//                   fieldName: "customEvent:u_id",
+//                   stringFilter: {
+//                     value: "(not set)",
+//                   },
+//                 },
+//               },
+//             },
+//           ],
+//         },
+//       },
+//       limit: "100000",
+//     });
+
+//     console.log(linkResponse);
+//   } catch (e) {
+//     console.log("LINK REPORT error", e);
+//   }
+
+//   return {
+//     props: {},
+//   };
+// }
+
+export default Privacypolicy;

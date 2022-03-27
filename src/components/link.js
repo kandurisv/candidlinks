@@ -1,7 +1,5 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx, NavLink as MenuLink, Link as A } from "theme-ui";
 import NextLink from "next/link";
+import { Link as A, NavLink as MenuLink } from "@chakra-ui/react";
 export function NavLink({ path, label, children, ...rest }) {
   return (
     <NextLink href={path}>

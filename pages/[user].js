@@ -1,20 +1,35 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx, Container, Flex, Image, Button, Text, Divider } from "theme-ui";
-import React, { useContext, useState, useEffect } from "react";
-import Logo from "components/logo";
-import { nonauthapi } from "lib/api";
-import { Sidebar } from "components/user/Sidebar";
+import logo from "assets/CaNDiD_B.png";
+import { Link } from "components/link";
 import { MainScreen } from "components/user/MainScreen";
-import Lottie from "lottie-react";
-import smm from "../public/lottie/smn.json";
+import { Sidebar } from "components/user/Sidebar";
 import { UserNotFound } from "components/user/UserNotFound";
-import Head from "next/head";
 import { DrawerProvider } from "contexts/drawer/drawer.provider";
-import Header from "components/header/header";
+import { ampapi, ampdashboard, ampsecret, nonauthapi } from "lib/api";
+import Lottie from "lottie-react";
+import Head from "next/head";
 import { useRouter } from "next/router";
+import React from "react";
+import { Button, Divider, Flex, Image } from "@chakra-ui/react";
+import isURL from "validator/lib/isURL";
+import smm from "../public/lottie/smn.json";
+
+import { event, pageview } from "analytics/ga";
+import userStyles from "styles/user";
+
 export default function User({ links, recos, user, socials, buckets }) {
   const [summary, setSummary] = React.useState({});
+
+  React.useEffect(() => {
+    if(user[0]){
+      pageview(user[0].uuid);
+    }
+
+    setSummary({
+      products: recos.filter((item) => isURL(item.prod_link) == true).length,
+      links: links.filter((item) => isURL(item.link) == true).length,
+    });
+  }, [recos, links, user]);
+
   const router = useRouter();
   if (!user.length) {
     return (
@@ -27,17 +42,13 @@ export default function User({ links, recos, user, socials, buckets }) {
   if (!recos.length && !links.length) {
     return (
       <div>
-        <Flex as="container" sx={styles.container}>
-          <Flex as="sidebar" sx={styles.sidebar}>
+        <Flex as="container" sx={userStyles.container}>
+          <Flex as="sidebar" sx={userStyles.sidebar}>
             <Sidebar socials={socials} user={user} summary={summary} />
           </Flex>
-          <Flex as="mainscreen" sx={styles.mainscreen}>
+          <Flex as="mainscreen" sx={userStyles.mainscreen}>
             <Flex
-              sx={{
-                height: ["400px", "400px", "400px", "700px", "800px", "900px"],
-                justifyContent: "center",
-                flex: 1,
-              }}
+              sx={userStyles.lottieFlex}
             >
               <Lottie animationData={smm} />
             </Flex>
@@ -48,35 +59,46 @@ export default function User({ links, recos, user, socials, buckets }) {
   }
 
   const handleCreateLinkButton = () => {
+    event("CREATE_YOUR_CNDD_LINK", { new_user: true });
     router.push("/auth");
   };
   return (
     <div>
       <Head>
-        <title>User Screen</title>
+        <title>{user[0].u_name}</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
+        <link rel="icon" href={user[0].u_profile_image} />
       </Head>
-
       <DrawerProvider>
-        <header sx={styles.header}>
-          <Container sx={styles.headerContainer}>
-            <Flex as="logo">
-              <Logo />
+        <header sx={userStyles.header}>
+          <Flex sx={userStyles.headerContainer}>
+            <Flex as="logo" sx={userStyles.logouserStyles}>
+              <Link
+                path="/"
+              >
+                <Image
+                  src={logo}
+                  width="150px"
+                  height="50px"
+                  // sx={userStyles.logouserStyles}
+                  alt="startup landing logo"
+                />
+              </Link>
             </Flex>
             <Flex>
-              <Button sx={styles.button} onClick={handleCreateLinkButton}>
-                Create your CNDD link!
+              <Button sx={userStyles.button} onClick={handleCreateLinkButton}>
+                Create your own CNDD link!
               </Button>
             </Flex>
-          </Container>
+          </Flex>
         </header>
       </DrawerProvider>
-
-      <Flex as="container" sx={styles.container}>
-        <Flex as="sidebar" sx={styles.sidebar}>
+      <Divider/>
+      <Flex as="container" sx={userStyles.container}>
+        <Flex as="sidebar" sx={userStyles.sidebar}>
           <Sidebar socials={socials} user={user} summary={summary} />
         </Flex>
-        <Flex as="mainscreen" sx={styles.mainscreen}>
+        <Flex as="mainscreen" sx={userStyles.mainscreen}>
           <MainScreen
             links={links}
             recos={recos}
@@ -112,7 +134,7 @@ export async function getServerSideProps(context) {
       ].map((fetchApi) => fetchApi.then((res) => res.json()))
     );
 
-    console.log(recos, links);
+    // console.log(recos, links);
 
     return {
       props: {
@@ -133,70 +155,3 @@ export async function getServerSideProps(context) {
     };
   }
 }
-
-const styles = {
-  container: {
-    mt: "96px",
-    flex: 1,
-    maxWidth: "100%",
-    display: "flex",
-    flexDirection: ["column", "column", "row", "row", "row", "row"],
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-  },
-  mainscreen: {
-    flex: [1, 1, 1, 2, 3, 3],
-  },
-  sidebar: {
-    p: "10px",
-    width: "100%",
-    flex: 1,
-    pl: "8px",
-    pt: "16px",
-    alignItems: "center",
-    justifyContent: "center",
-    position: "sticky",
-    bottom: "8px",
-    alignSelf: "flex-end",
-  },
-
-  header: {
-    color: "text_white",
-    fontWeight: "normal",
-    py: ["0px", "0px", "8px", "8px", "8px", "8px"],
-    width: "100%",
-    backgroundColor: "#fff",
-    transition: "all 0.4s ease",
-    borderBottom: "1px solid #E9EDF5",
-    position: "fixed",
-    top: 0,
-    left: 0,
-    zIndex: 100,
-    "&.sticky": {
-      backgroundColor: "background",
-      color: "text",
-      py: "16px",
-      boxShadow: "0 1px 2px rgba(0, 0, 0, 0.06)",
-    },
-  },
-
-  headerContainer: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    maxWidth: ["100%", null, null, null, null, "1172px", "1280px"],
-  },
-
-  button: {
-    mr: 2,
-    bg: "#D7354A",
-    ":hover": {
-      bg: "#C23043",
-    },
-    borderRadius: 10,
-    color: "white",
-    fontSize: "lg",
-    width: "md",
-    height: 60,
-  },
-};

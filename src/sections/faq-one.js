@@ -1,8 +1,8 @@
-import React from "react";
-import Image from "next/image";
-import { Box, Container, Flex, Heading, Text } from "theme-ui";
-import Accordion from "components/accordion/accordion";
 import image from "assets/faq-one-1.png";
+import Accordion from "components/accordion/accordion";
+import Image from "next/image";
+import React from "react";
+import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 const FAQ_ONE_DATA = {
   sectionImage: image,
   tagline: "Website content builder",
@@ -56,7 +56,7 @@ const FaqOne = () => {
           alt="sectionImage"
         />
       </Box>
-      <Container sx={styles.container}>
+      <Flex sx={styles.container}>
         <Flex sx={styles.flex}>
           <Box sx={styles.content}>
             <Box sx={styles.sectionTitle}>
@@ -67,7 +67,7 @@ const FaqOne = () => {
             <Accordion items={faqs} />
           </Box>
         </Flex>
-      </Container>
+      </Flex>
     </Box>
   );
 };
@@ -79,7 +79,7 @@ const styles = {
     position: "relative",
   },
   container: {
-    maxWidth: ["100%", null, null, null, null, "1172px", "1280px"],
+    flexDirection: "column",
     position: "relative",
   },
   sectionImage: {

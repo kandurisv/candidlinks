@@ -1,15 +1,14 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx, Container, Flex, Image, Text, Grid } from "theme-ui";
-import firebase from "firebase";
-import { auth, googleAuthProvider } from "../../../lib/firebase";
-import { Button } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { ProductsCard } from "./ProductsCard";
+import { Flex } from "@chakra-ui/react";
 import { ProductsBucket } from "./ProductsBucket";
 
 // Add a custom Link
-export function ShowProducts({ data, bucketData }) {
+export function ShowProducts({
+  data,
+  bucketData,
+  deleteItem,
+  editProductModal,
+}) {
   const router = useRouter();
   const buckets = [];
   data.map((item) => {
@@ -23,7 +22,7 @@ export function ShowProducts({ data, bucketData }) {
   };
 
   return (
-    <Container sx={{ width: "95%" }}>
+    <Flex sx={{ width: "95%", mx: "auto" }}>
       {buckets.map((item, index) => {
         return (
           <ProductsBucket
@@ -33,15 +32,14 @@ export function ShowProducts({ data, bucketData }) {
             link={
               bucketData.filter((item) => item.name === buckets[index])[0] || ""
             }
+            deleteItem={(item) => {
+              deleteItem(item);
+              // console.log("recosshow", item);
+            }}
+            editProductModal={(item) => editProductModal(item)}
           />
         );
       })}
-    </Container>
+    </Flex>
   );
 }
-
-const style = {
-  grid: {
-    width: "100%",
-  },
-};

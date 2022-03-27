@@ -1,22 +1,20 @@
-import React from "react";
-import { ThemeProvider } from "theme-ui";
-import { StickyProvider } from "contexts/app/app.provider";
-import theme from "theme";
-import SEO from "components/seo";
-import Layout from "components/layout";
-import Banner from "sections/banner";
-import Features from "sections/features";
-import FaqTwo from "sections/faq-two";
-import Pricing from "sections/pricing";
-import ProductFeature from "sections/product-feature";
-import Banner1 from "sections/banner1";
-import { useRouter } from "next/router";
-import { initOptimize } from "analytics/go";
+import { Flex } from "@chakra-ui/react";
 import "@fontsource/poppins";
-import { pageview } from "react-ga";
-import Script from "next/script";
-import { ContactUsModal } from "sections/video";
+import { initOptimize } from "analytics/go";
+import Layout from "components/layout";
+import SEO from "components/seo";
+import { StickyProvider } from "contexts/app/app.provider";
 import Head from 'next/head';
+import { useRouter } from "next/router";
+import React from "react";
+import { pageview } from "react-ga";
+import Banner from "sections/banner";
+import Banner1 from "sections/banner1";
+import FaqTwo from "sections/faq-two";
+import Features from "sections/features";
+import ProductFeature from "sections/product-feature";
+import { ContactUsModal } from "sections/video";
+
 const useExperiment = (experimentId) => {
   const [variant, setVariant] = React.useState();
   React.useEffect(() => {
@@ -60,8 +58,8 @@ export default function IndexPage() {
   }, [router.events, variant]);
 
   return (
-    <ThemeProvider theme={theme}>
 
+      <Flex sx={{flexDirection:"column"}}>
       <Head>
         <title>Dashboard</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
@@ -82,6 +80,6 @@ export default function IndexPage() {
           <FaqTwo addQuestion={() => setOpenLinksModal(true)} />
         </Layout>
       </StickyProvider>
-    </ThemeProvider>
+      </Flex>
   );
 }
